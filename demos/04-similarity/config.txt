@@ -1,0 +1,41 @@
+[Config]
+title = Demo experiment (Chrome browser, XXX minutes to complete)
+description = This experiment requires you to XXX. Please use a Chrome browser in incognito mode. We keep track of how much money you earn as you progress through the experiment; this means that if the experiment has to end early (e.g. equipment problems) we know how much to pay you. This number will be displayed at the bottom of the screen during the experiment. If you finish the experiment but time out, don't worry, we will approve your experiment manually.
+contact_email_on_error = XXX@gmail.com
+organization_name = XXX
+
+recruiter = generic
+currency = $
+wage_per_hour = 12.0
+
+[Prolific]
+# recruiter = prolific
+
+# Setting `auto_recruit = false` means that PsyNet won't recruit participants itself,
+# you'll instead control recruitment via the Prolific interface.
+auto_recruit = false
+
+# When recruiting with Prolific we typically set a small base payment which we then supplement
+# with bonus for time spent on the task.
+prolific_estimated_completion_minutes = 2
+# 10 dollars an hour -> 16.666666667 cents per minutes
+base_payment = 0.34
+
+[Lucid]
+# When recruiting with Lucid below settings need to be applied,
+# except for `debug_recruiter` which only needs to be set for debug mode.
+
+# recruiter = lucid
+# debug_recruiter = DevLucidRecruiter
+# lucid_recruitment_config = file:./lucid_recruitment_config.json
+# show_reward = false
+
+[CAP-Recruiter]
+# When recruiting with CAP-Recruiter set the following:
+# recruiter = cap-recruiter
+#
+# Alternatively, when using the staging CAP-Recruiter (https://staging-cap-recruiter.ae.mpg.de/) set:
+# recruiter = staging-cap-recruiter
+#
+# For local debug CAP-Recruiter set:
+# debug_recruiter = dev-cap-recruiter

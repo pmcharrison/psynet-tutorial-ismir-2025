@@ -1,0 +1,20 @@
+[Config]
+
+title = Demo experiment (Chrome browser, XXX minutes to complete)
+description = This experiment requires you to XXX. Please use a Chrome browser in incognito mode. We keep track of how much money you earn as you progress through the experiment; this means that if the experiment has to end early (e.g. equipment problems) we know how much to pay you. This number will be displayed at the bottom of the screen during the experiment. If you finish the experiment but time out, don't worry, we will approve your experiment manually.
+contact_email_on_error = XXX@gmail.com
+organization_name = XXX
+
+
+recruiter = generic
+show_reward = False
+
+[Prolific]
+# recruiter = prolific
+
+# Setting `auto_recruit = false` means that PsyNet won't recruit participants itself,
+# you'll instead control recruitment via the Prolific interface.
+# auto_recruit = false
+
+# prolific_estimated_completion_minutes = 2
+# base_payment = 0.34

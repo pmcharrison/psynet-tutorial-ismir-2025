@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.10'
+
+      - name: Install pip and wheel
+        run: |
+          python -m pip install --upgrade pip wheel
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r constraints.txt
+
+      - name: Verify that constraints.txt is up to date
+        run: |
+          python -c "
+          import os
+          from dallinger.utils import ensure_constraints_file_presence
+          ensure_constraints_file_presence(os.getcwd())
+          "
+
+      - name: Install heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Start Dallinger Docker services
+        run: dallinger docker start-services
+
+      - name: Run psynet test local
+        run: pytest test.py

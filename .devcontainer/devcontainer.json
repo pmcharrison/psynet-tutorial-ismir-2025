@@ -1,0 +1,9 @@
+{
+    // "image": "registry.gitlab.com/psynetdev/psynet:v12.1.0",
+    "build": { "dockerfile": "../Dockerfile" },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+    "postCreateCommand": "bash .devcontainer/postcreate.sh",
+    "postAttachCommand": "bash .devcontainer/postattach.sh"
+}
