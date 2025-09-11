@@ -37,5 +37,5 @@ jobs:
       - name: Start Dallinger Docker services
         run: dallinger docker start-services
 
-      - name: Run psynet test local
-        run: pytest demos/01-simple-rating/test.py
+      - name: Run psynet test
+        run: pytest demos/*/test.py
