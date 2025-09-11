@@ -8,48 +8,22 @@ on:
 
 
 jobs:
-  tests:
-    name: Run test suite
+  test:
+    strategy:
+      matrix:
+        demo:
+          - demos/01-simple-rating
+          - demos/02-tapping
+          - demos/03-step-tag
+          - demos/04-similarity
     runs-on: ubuntu-latest
+    name: Test ${{ matrix.demo }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Run tests in dev container
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: for dir in demos/*/; do pytest "$dir/test.py"; done
-# jobs:
-#   build-and-test:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-
-#       - name: Set up Python
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version-file: '.python-version'
-
-#       - name: Install pip, wheel and uv
-#         run: |
-#           python -m pip install --upgrade pip wheel uv
-
-#       - name: Verify that constraints.txt is up to date
-#         run: |
-#           bash constraints.sh check
-
-#       - name: Install Python dependencies
-#         run: |
-#           pip install -r constraints.txt
-
-#       - name: Install heroku CLI
-#         run: |
-#           curl https://cli-assets.heroku.com/install.sh | sh
-
-#       - name: Start Dallinger Docker services
-#         run: dallinger docker start-services
-
-#       - name: Run psynet test
-#         run: pytest demos/*/test.py
+          runCmd: pytest ${{ matrix.demo }}/test.py
+          push: never
 
