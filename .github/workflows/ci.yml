@@ -18,7 +18,7 @@ jobs:
       - name: Run tests in dev container
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: pytest demos/*/test.py
+          runCmd: for dir in demos/*/; do pytest "$dir/test.py"; done
 # jobs:
 #   build-and-test:
 #     runs-on: ubuntu-latest
