@@ -1,8 +1,14 @@
-Welcome to My Docs
-==================
+PsyNet @ ISMIR 2025
+===================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Exercises:
 
-   getting_started
+   exercises/00-pipelines
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Demos:
+
+   demos/index
