@@ -33,4 +33,4 @@ fi
 
 echo "...complete."
 
-echo "Your Codespace is ready!
+echo "Your Codespace is ready!"
