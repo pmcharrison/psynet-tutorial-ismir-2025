@@ -29,7 +29,16 @@ For this exercise, your task will be to choose one of these pipelines and apply 
 You are welcome to choose whichever pipeline you like; if you want something simple, go with the 'simple-rating' pipeline,
 but if you think one of the other pipelines connects particularly well to your own research, go with that.
 
+Steps
+-----
+
+1. Choose a pipeline from the list above.
+2. Open the corresponding directory in your IDE (either in GitHub Codespaces or locally).
+3. Copy your stimuli into the ``data/`` directory.
+4. Update the ``experiment.py`` file to point to your stimuli.
+5. Try the experiment by running ``psynet debug local``.
+
 Hints
 -----
 
-- Before you make any changes
+- Before you start, make sure

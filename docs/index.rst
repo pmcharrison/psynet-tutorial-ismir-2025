@@ -2,13 +2,15 @@ PsyNet @ ISMIR 2025
 ===================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Exercises:
+   :numbered:
 
-   exercises/00-pipelines
+   exercises/01-running-a-demo
+   exercises/02-pipelines
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Demos:
 
    demos/index

@@ -32,3 +32,5 @@ docker run -d --name postgres \
 fi
 
 echo "...complete."
+
+echo "Your Codespace is ready!

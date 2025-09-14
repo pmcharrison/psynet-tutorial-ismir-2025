@@ -1,8 +1,9 @@
-Demos
-=====
+List of demos
+=============
 
 .. toctree::
    :maxdepth: 1
+   :numbered:
 
    01-simple-rating
    02-tapping
