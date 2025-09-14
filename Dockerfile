@@ -1,4 +1,4 @@
-FROM python:3.12.11-bookworm
+FROM python:3.12.10-bookworm
 
 RUN pip install uv
 
