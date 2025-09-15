@@ -6,6 +6,7 @@
 rm /root/.dallingerconfig || true
 ln -s /workspaces/${RepositoryName}/.devcontainer/.dallingerconfig /root/.dallingerconfig
 
+export DEMOS=/workspaces/${RepositoryName}/demos
 
 # The following code launches the Redis and Postgres services in Docker containers.
 echo "Preparing services:"

@@ -32,7 +32,7 @@ Setting up your environment
 
         .. code-block:: bash
 
-            cd ~/demos/01-simple-rating  # Change to the experiment directory
+            cd $DEMOS/01-simple-rating  # Change to the experiment directory
             psynet debug local  # Launch the experiment in debug mode
 
         Wait a few moments, and you should see a popup asking "Do you want Code to open the external website?"
