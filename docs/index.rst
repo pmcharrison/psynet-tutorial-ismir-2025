@@ -3,7 +3,7 @@ PsyNet @ ISMIR 2025
 
 
 This is the companion website for the PsyNet tutorial held on 21 September 2025
-at the International Society for Music Information Retrieval 2025 conference
+at the International Society for Music Information Retrieval conference
 in Daejeon, Korea. It provides a collection of exercises and demos that
 demonstrate the use of PsyNet.
 
