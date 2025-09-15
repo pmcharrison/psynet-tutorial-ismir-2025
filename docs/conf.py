@@ -1,7 +1,7 @@
 # conf.py
 project = "PsyNet @ ISMIR 2025"
 author = "Me"
-extensions = ["sphinx_design"]
+extensions = ["sphinx_design", "sphinx_copybutton"]
 templates_path = ["_templates"]
 exclude_patterns = []
 
