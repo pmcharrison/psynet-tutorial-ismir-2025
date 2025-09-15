@@ -12,7 +12,6 @@
 # TODO: There may be a wierd bug in the plotting/ analysis of tapping (see output analysis plots in dashboard)
 # TODO: PsyNet improvement - automatically extracting n_stimuli and stimuli durations instead of hardcoding them
 
-
 import psynet.experiment
 from psynet.timeline import Timeline
 from psynet.trial.static import StaticTrialMaker
@@ -29,8 +28,21 @@ from .repp_music import get_music_stimuli_loader, TapTrialMusic, music_tapping_i
 
 
 ########################################################
+# Musical task parameters
+########################################################
+
+# The stimuli must all be .wav files
+STIMULUS_DIR = "data/music_stimuli"
+
+# Update the trial time estimate (seconds) to match the length of the audio stimuli
+# you have provided. Allow some time for page loading etc.
+TapTrialMusic.time_estimate = 40
+
+########################################################
 # Timeline
 ########################################################
+
+music_stimuli_loader = get_music_stimuli_loader(STIMULUS_DIR)
 
 def get_timeline():
     return Timeline(
@@ -54,30 +66,19 @@ def get_timeline():
     )
 
 ########################################################
-# Global parameters
-########################################################
-
-# Set experiment parameters
-TapTrialISO.time_estimate = 40
-TapTrialMusic.time_estimate = 40
-
-# Criteria for failing a trial
-MIN_RAW_TAPS = 50
-MAX_RAW_TAPS = 200
-
-
-########################################################
-# Stimuli
+# Isochronous tapping parameters
 ########################################################
 
 # In the isochronous task, the paricipant taps along to a steady metronome.
+# We use this task as a standardized baseline in advance of the musical task.
+
+
+TapTrialISO.time_estimate = 40
+
 isochronous_stimuli = [
     get_isochronous_stimulus("iso_800ms", [800] * 15, bot_response="data/iso_bot_responses/example_iso_slow_tap.wav"),
     get_isochronous_stimulus("iso_600ms", [600] * 12, bot_response="data/iso_bot_responses/example_iso_fast_tap.wav"),
 ]
-
-music_stimuli_loader = get_music_stimuli_loader("data/music_stimuli", "data/music_bot_responses")
-
 
 ########################################################
 # Experiment

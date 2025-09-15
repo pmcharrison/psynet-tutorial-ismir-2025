@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from markupsafe import Markup
-from psynet.asset import asset, LocalStorage
+from psynet.asset import asset
 from psynet.page import InfoPage
 from psynet.trial.static import StaticNode
 
@@ -41,6 +41,27 @@ class TapTrialMusic(TapTrial):
 
 
 def get_music_stimuli_loader(stimuli: PathLike, bot_responses: Optional[PathLike] = None):
+    """
+    Get a loader for the music stimuli.
+
+    Parameters
+    ----------
+
+    stimuli :
+        A path to a directory containing the music stimuli.
+        These stimuli should be .wav files.
+        Each audio file (<name>.wav) should also have an onset file (<name>.txt) in the same directory.
+
+    bot_responses :
+        An optional path to a directory containing the bot responses for the music stimuli.
+        These should be audio recordings produced by a participant tapping along to the input stimuli.
+        They should also be .wav files, with identical names to the input stimuli.
+
+    Returns
+    -------
+
+    A callable that returns a list of nodes that can be passed to the trial maker.
+    """
     def deferred():
         nonlocal stimuli
         nonlocal bot_responses
@@ -48,6 +69,10 @@ def get_music_stimuli_loader(stimuli: PathLike, bot_responses: Optional[PathLike
         stimuli = Path(stimuli)
 
         audios = list(stimuli.glob("*.wav"))  # TODO: is mp3 also supported?
+
+        if not len(audios) > 0:
+            raise FileNotFoundError(f"No audio files found in {stimuli}. Note: only .wav files are supported for now.")
+
         names = [audio.stem for audio in audios]
         texts = [audio.with_suffix(".txt") for audio in audios]
 

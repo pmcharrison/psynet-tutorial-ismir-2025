@@ -94,14 +94,25 @@ class TapTrial(AudioRecordTrial, StaticTrial):
         )
 
     def get_bot_response_media(self):
-        try:
+        if "bot_response" in self.assets:
             bot_audio = self.assets["bot_response"]
-        except KeyError as e:
-            raise ValueError(
-                "To run bots through this experiment, you must provide a bot_responses argument to get_music_stimuli_loader"
-            ) from e
-        assert isinstance(bot_audio.storage, LocalStorage), "Sorry, this test currently only supports local storage"
-        return bot_audio.storage.get_file_system_path(bot_audio.host_path)
+
+            # For now the testing code assumes LocalStorage.
+            # It should be possible to update it to work with S3Storage with a little more work,
+            # but it doesn't seem essential.
+            assert isinstance(bot_audio.storage, LocalStorage), "Sorry, this test currently only supports local storage"
+
+            # This is a bit convoluted but OK
+            # (we should update PsyNet's get_bot_response_media so that it works directly with assets)
+            audio_path = bot_audio.storage.get_file_system_path(bot_audio.host_path)
+        else:
+            # In the absence of a bot response file, we just use the stimulus itself,
+            # which is kind of what we'd get if the participant didn't tap at all.
+            stimulus = self.assets["stimulus"]
+            stimulus_path = stimulus.storage.get_file_system_path(stimulus.host_path)
+            audio_path = stimulus_path + "/audio.wav"
+
+        return audio_path
 
 
 class NumpySerializer(json.JSONEncoder):
