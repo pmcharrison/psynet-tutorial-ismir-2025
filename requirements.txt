@@ -12,6 +12,9 @@ psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@66f697b34c16a63ae39963f35e27a
 # Pinning to DT fix: https://github.com/Dallinger/Dallinger/pull/8107/commits
 dallinger@git+https://github.com/Dallinger/Dallinger.git@329c661591883d684b3ac0f2cb3d5221294f3c4d#egg=dallinger
 
+# This is needed because PsyNet is missing this dependency
+sqlalchemy-postgres-copy
+
 repp@git+https://gitlab.com/computational-audition/repp.git@master#egg=repp
 step@git+https://github.com/pmcharrison/STEP.git#egg=step
 
