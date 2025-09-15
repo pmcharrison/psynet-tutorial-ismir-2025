@@ -16,7 +16,8 @@ This repository contains several example pipelines designed specifically for aud
 - :doc:`01-simple-rating <../demos/01-simple-rating>`: Participants rate audio stimuli for specified attributes;
 - :doc:`02-tapping <../demos/02-tapping>`: Participants tap to the beat of musical stimuli;
 - :doc:`03-step-tag <../demos/03-step-tag>`: Participants collaboratively generate tags for audio stimuli;
-- :doc:`04-similarity <../demos/04-similarity>`: Participants rate the similarity of audio stimuli.
+- :doc:`04-similarity <../demos/04-similarity>`: Participants rate the similarity of audio stimuli;
+- :doc:`05-timed-push-buttons <../demos/05-timed-push-buttons>`: Participants press buttons at interesting moments in audio stimuli.
 
 All these pipelines work in the same way: the user specifies a directory of audio stimuli and the pipeline takes care of the rest.
 Typically the directory is linked into the ``experiment.py`` file with some kind of glob pattern, like this:
