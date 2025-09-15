@@ -1,14 +1,19 @@
-# We're currently pinning to a recent commit on the PsyNet master branch.
-# Ideally we'd pin to a release version soon.
-# Note: it's dangerous to specify the branch name directly, as it may confuse the Docker cache.
-# If you want to update your repository to use the latest version of this branch:
-# 1. Go to https://gitlab.com/PsyNetDev/PsyNet
-# 2. Copy the latest commit hash (should display near the top of the page),
-#    and paste it below after `PsyNet@`
-# 3. Run `psynet generate-constraints` in the terminal
-# 4. Add `requirement.txt` and `constraints.txt` to git, then commit, then push
-# 5. Press CMD-SHIFT-P, then select `Codespaces: Rebuild Container`
-psynet@git+https://gitlab.com/PsyNetDev/PsyNet@23432cc73b22d76fbb6899e6bdac58a536c77e35#egg=psynet
+# Note: This requirements.txt file is written to cover the whole
+# psynet-tutorial-ismir-2025 repository, not just individual demos.
+# If you were deploying one of these demos, you would update this requirements.txt
+# file to only include the dependencies for that demo.
 
-# repp@git+https://gitlab.com/computational-audition/repp@master#egg=repp
-# matplotlib
+# We are pinning to some specific commits for PsyNet/Dallinger which
+# have unmerged changes.
+psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@caf93797de338c29151ecf89928d6ebcde8517ed#egg=psynet
+
+# Pinning to DT fix: https://github.com/Dallinger/Dallinger/pull/8107/commits
+dallinger@git+https://github.com/Dallinger/Dallinger.git@329c661591883d684b3ac0f2cb3d5221294f3c4d#egg=dallinger
+
+# This is needed because PsyNet is missing this dependency
+sqlalchemy-postgres-copy
+
+repp@git+https://gitlab.com/computational-audition/repp.git@master#egg=repp
+step@git+https://github.com/pmcharrison/STEP.git#egg=step
+
+matplotlib

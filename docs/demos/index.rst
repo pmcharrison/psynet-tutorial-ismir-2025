@@ -9,3 +9,4 @@ List of demos
    02-tapping
    03-step-tag
    04-similarity
+   05-timed-push-buttons

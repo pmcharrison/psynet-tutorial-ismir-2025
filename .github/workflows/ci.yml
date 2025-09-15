@@ -16,6 +16,7 @@ jobs:
           - demos/02-tapping
           - demos/03-step-tag
           - demos/04-similarity
+          - demos/05-timed-push-buttons
     runs-on: ubuntu-latest
     name: Test ${{ matrix.demo }}
     steps:
