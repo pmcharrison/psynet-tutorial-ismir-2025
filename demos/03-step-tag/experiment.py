@@ -18,7 +18,7 @@ from .audio_step_tag import AudioStepTag
 
 
 STIMULUS_DIR = Path("data/audio")
-STIMULUS_PATHS = STIMULUS_DIR.glob("*.mp3")
+STIMULUS_PATTERN = "*.mp3"
 
 
 def get_timeline():
@@ -53,7 +53,7 @@ def get_timeline():
 def list_stimuli():
     return {
         path.stem: asset(path, cache=True)
-        for path in STIMULUS_PATHS
+        for path in STIMULUS_DIR.glob(STIMULUS_PATTERN)
     }
 
 class Exp(psynet.experiment.Experiment):

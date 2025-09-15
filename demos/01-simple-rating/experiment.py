@@ -30,7 +30,7 @@ from psynet.trial.static import StaticNode, StaticTrial, StaticTrialMaker
 
 
 STIMULUS_DIR = Path("data/instrument_sounds")
-STIMULUS_PATHS = STIMULUS_DIR.glob("*.mp3")
+STIMULUS_PATTERN = "*.mp3"
 
 
 def get_timeline():
@@ -98,7 +98,7 @@ def get_nodes():
                 "stimulus_audio": asset(path, cache=True),  # reuse the uploaded file between deployments
             },
         )
-        for path in STIMULUS_PATHS
+        for path in STIMULUS_DIR.glob(STIMULUS_PATTERN)
     ]
 
 

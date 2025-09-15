@@ -4,31 +4,32 @@ This is an experiment that allows participants to interact in chains to write an
 # pylint: disable=missing-class-docstring,missing-function-docstring
 
 from pathlib import Path
+
 import psynet.experiment
+
 from psynet.asset import asset  # noqa
-import psynet.experiment
-from psynet.timeline import Timeline, join, CodeBlock, PageMaker
+from psynet.timeline import Timeline, join, PageMaker
 from psynet.page import InfoPage
-from psynet.modular_page import ModularPage, AudioPrompt, TimedPushButtonControl, TextControl
+from psynet.modular_page import ModularPage, AudioPrompt, TextControl
 from psynet.trial.static import StaticNode, StaticTrial, StaticTrialMaker
-from psynet.trial.main import TrialMaker, Trial
-from datetime import datetime
 from markupsafe import Markup
 
 from .control import SingleTimedPushButtonControl
 
 
+STIMULUS_DIR = "data/global_music"
+STIMULUS_PATTERN = "*.mp3"
 TRIALS_PER_PARTICIPANT = 2
 
 
 def get_timeline():
     return Timeline(
         InfoPage("Welcome! You will listen to audio and mark interesting moments.", time_estimate=5),
-        CodeBlock(lambda participant: participant.var.set("event", [1])),
+        # CodeBlock(lambda participant: participant.var.set("event", [1])),
         StaticTrialMaker(
             id_="audio_timed_button_trial",
             trial_class=AudioTimedButtonTrial,
-            nodes=get_nodes,
+            nodes=get_nodes,  # not get_nodes()!
             expected_trials_per_participant=TRIALS_PER_PARTICIPANT,
             max_trials_per_participant=TRIALS_PER_PARTICIPANT,
         ),
@@ -46,7 +47,7 @@ def get_nodes():
                 "stimulus_audio": asset(path, cache=False),  # reuse the uploaded file between deployments
             },
         )
-        for path in Path("data/global_music").glob("*.mp3")
+        for path in Path(STIMULUS_DIR).glob(STIMULUS_PATTERN)
     ]
 
 
@@ -82,8 +83,6 @@ class AudioTimedButtonTrial(StaticTrial):
 
     def describe_interesting_moments(self, participant):
         # The participant describes the interesting moments
-        # from psynet import debugger
-        # debugger()
         return [
             ModularPage(
                 f"event_description_{i}",
@@ -102,5 +101,5 @@ class AudioTimedButtonTrial(StaticTrial):
         ]
 
 
-class AudioTimedButtonExperiment(psynet.experiment.Experiment):
+class Experiment(psynet.experiment.Experiment):
     timeline = get_timeline()

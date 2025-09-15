@@ -31,7 +31,7 @@ from .repp_music import get_music_stimuli_loader, TapTrialMusic, music_tapping_i
 # Musical task parameters
 ########################################################
 
-# The stimuli must all be .wav files
+# Note: The stimuli must all be .wav files
 STIMULUS_DIR = "data/music_stimuli"
 
 # Update the trial time estimate (seconds) to match the length of the audio stimuli

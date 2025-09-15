@@ -15,6 +15,12 @@ from psynet.participant import Participant
 from psynet.timeline import Event, MediaSpec, ProgressDisplay, Timeline
 from psynet.trial.static import StaticNode, StaticTrial, StaticTrialMaker
 
+
+STIMULUS_DIR = "data/instrument_sounds"
+STIMULUS_PATTERN = "*.mp3"
+
+# With a large number of stimuli, the number of pairwise combinations becomes very large,
+# so we need to limit the number of trials per participant.
 N_TRIALS_PER_PARTICIPANT = 10
 
 
@@ -46,13 +52,12 @@ def get_assets():
 
 
 def list_stimuli():
-    stimulus_dir = Path("data/instrument_sounds")
     return [
         {
             "name": path.stem,
             "path": path,
         }
-        for path in sorted(list(stimulus_dir.glob("*.mp3")))
+        for path in sorted(list(Path(STIMULUS_DIR).glob(STIMULUS_PATTERN)))
     ]
 
 
