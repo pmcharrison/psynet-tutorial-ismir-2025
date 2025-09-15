@@ -7,7 +7,10 @@
 # 3. Run `psynet generate-constraints` in the terminal
 # 4. Add `requirement.txt` and `constraints.txt` to git, then commit, then push
 # 5. Press CMD-SHIFT-P, then select `Codespaces: Rebuild Container`
-psynet@git+https://gitlab.com/PsyNetDev/PsyNet@23432cc73b22d76fbb6899e6bdac58a536c77e35#egg=psynet
+psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@66f697b34c16a63ae39963f35e27a328f65c8c35#egg=psynet
+
+# Pinning to DT fix: https://github.com/Dallinger/Dallinger/pull/8107/commits
+dallinger@git+https://github.com/Dallinger/Dallinger.git@329c661591883d684b3ac0f2cb3d5221294f3c4d#egg=dallinger
 
 repp@git+https://gitlab.com/computational-audition/repp.git@master#egg=repp
 step@git+https://github.com/pmcharrison/STEP.git#egg=step
