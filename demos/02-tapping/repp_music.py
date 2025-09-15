@@ -26,7 +26,7 @@ music_tapping_instructions = InfoPage(
         beat of the music. This metronome will gradually fade out, but you need to keep tapping to
         the beat until the music ends.
     <br><br>
-    <img style="width:50%; height:35%;" src="/static/images/example_task.png"  alt="example_task">
+    <img style="width:80%;" src="/static/images/example_task.png"  alt="example_task">
     <br><br>
     Click <b>next</b> to start tapping to the music!
     <hr>
