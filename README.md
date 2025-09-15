@@ -9,4 +9,4 @@ as well as for the [workshop website](https://pmcharrison.github.io/psynet-works
 
 - Run a demo: `cd demos/01-simple-rating && psynet debug local`
 - Regenerate `constraints.txt` files for all demos: `bash constraints.sh`
-- Serve docs: `cd docs && make docs live`
+- Serve docs: `make -C docs live`
