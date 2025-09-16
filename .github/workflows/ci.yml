@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         demo:
-          - demos/features/pages
+          - demos/features/01-pages
           - demos/pipelines/01-simple-rating
           - demos/pipelines/02-tapping
           - demos/pipelines/03-step-tag
