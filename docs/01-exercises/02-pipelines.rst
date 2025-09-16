@@ -1,17 +1,27 @@
 Pipelines
 =========
 
-One of the key applications of PsyNet is creating data collection 'pipelines'.
-A pipeline is a standardized procedure that takes some stimuli as an input and
-produces human data as an output.
+A key use case of PsyNet is creating data collection 'pipelines'.
+We can define a pipeline as a standardized procedure that takes some stimuli
+as an input and produces human data as an output.
 For example, we might take a directory of audio files as an input and run it through
 a 'rating' pipeline, where participants rate the audio files for pleasantness on a scale from 1 to 5.
 When we deploy the pipeline, PsyNet handles tedious logistic details such as asset deployment and participant recruitment;
 we simply wait for the experiment to complete and then download the data.
 
-The purpose of this exercise is to show you how easy it is to take a pre-existing pipeline and
-apply it to your own stimuli.
-This repository contains several example pipelines designed specifically for audio stimuli:
+In PsyNet a pipeline is defined by creating an 'experiment directory',
+namely a folder of source code files that define the architecture and logic of an experiment.
+The most important of these files is the ``experiment.py`` file,
+which contains the primary logic of the experiment;
+we also have files like ``config.txt``, which contains configuration parameters,
+``requirements.txt``/``constraints.txt`` which define our Python dependencies,
+``Dockerfile`` which defines our system environment, and so on.
+
+For this tutorial we have prepared a collection of pipelines designed expressly for audio stimuli.
+However, it is perfectly possibly to design analogous pipelines for images, videos, or other
+kinds of content.
+
+Here's a list of those pipelines:
 
 - :doc:`01-simple-rating <../02-demos/01-simple-rating>`: Participants rate audio stimuli for specified attributes;
 - :doc:`02-tapping <../02-demos/02-tapping>`: Participants tap to the beat of musical stimuli;
@@ -24,8 +34,15 @@ Typically the directory is specified with some code like this:
 
 .. code-block:: python
 
-    STIMULUS_DIR = "data/instrument_sounds"
-    STIMULUS_PATTERN = "*.mp3"
+  STIMULUS_DIR = "data/instrument_sounds"
+  STIMULUS_PATTERN = "*.mp3"
+
+.. note::
+
+  File paths are typically specified relative to the root of the
+  experiment directory, i.e. the directory containing the ``experiment.py`` file).
+  However, if you want to point to files outside your experiment directory,
+  you can use absolute paths (e.g. ``/Users/alex/corpora/megacorpus``).
 
 For this exercise, your task will be to choose one of these pipelines and apply it to your own stimuli.
 You are welcome to choose whichever pipeline you like; if you want something simple, go with the 'simple-rating' pipeline,
