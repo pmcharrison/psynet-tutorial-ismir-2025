@@ -7,6 +7,6 @@ as well as for the [workshop website](https://pmcharrison.github.io/psynet-works
 
 ## Useful commands
 
-- Run a demo: `cd demos/01-simple-rating && psynet debug local`
+- Run a demo: `cd demos/pipelines/01-simple-rating && psynet debug local`
 - Regenerate `constraints.txt` files for all demos: `bash constraints.sh`
 - Serve docs: `make -C docs live`

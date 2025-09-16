@@ -23,11 +23,11 @@ kinds of content.
 
 Here's a list of those pipelines:
 
-- :doc:`01-simple-rating <../02-demos/01-simple-rating>`: Participants rate audio stimuli for specified attributes;
-- :doc:`02-tapping <../02-demos/02-tapping>`: Participants tap to the beat of musical stimuli;
-- :doc:`03-step-tag <../02-demos/03-step-tag>`: Participants collaboratively generate tags for audio stimuli;
-- :doc:`04-similarity <../02-demos/04-similarity>`: Participants rate the similarity of audio stimuli;
-- :doc:`05-timed-push-buttons <../02-demos/05-timed-push-buttons>`: Participants press buttons at interesting moments in audio stimuli.
+- :doc:`01-simple-rating <../02-demos/pipelines/01-simple-rating>`: Participants rate audio stimuli for specified attributes;
+- :doc:`02-tapping <../02-demos/pipelines/02-tapping>`: Participants tap to the beat of musical stimuli;
+- :doc:`03-step-tag <../02-demos/pipelines/03-step-tag>`: Participants collaboratively generate tags for audio stimuli;
+- :doc:`04-similarity <../02-demos/pipelines/04-similarity>`: Participants rate the similarity of audio stimuli;
+- :doc:`05-timed-push-buttons <../02-demos/pipelines/05-timed-push-buttons>`: Participants press buttons at interesting moments in audio stimuli.
 
 All these pipelines work in the same way: the user specifies a directory of audio stimuli and the pipeline takes care of the rest.
 Typically the directory is specified with some code like this:

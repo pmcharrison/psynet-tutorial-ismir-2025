@@ -1,12 +1,24 @@
 List of demos
 =============
 
+Pipelines
+---------
+
 .. toctree::
    :maxdepth: 1
    :numbered:
 
-   01-simple-rating
-   02-tapping
-   03-step-tag
-   04-similarity
-   05-timed-push-buttons
+   pipelines/01-simple-rating
+   pipelines/02-tapping
+   pipelines/03-step-tag
+   pipelines/04-similarity
+   pipelines/05-timed-push-buttons
+
+Features
+--------
+
+.. toctree::
+   :maxdepth: 1
+   :numbered:
+
+   features/01-pages

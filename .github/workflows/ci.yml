@@ -12,11 +12,12 @@ jobs:
     strategy:
       matrix:
         demo:
-          - demos/01-simple-rating
-          - demos/02-tapping
-          - demos/03-step-tag
-          - demos/04-similarity
-          - demos/05-timed-push-buttons
+          - demos/features/pages
+          - demos/pipelines/01-simple-rating
+          - demos/pipelines/02-tapping
+          - demos/pipelines/03-step-tag
+          - demos/pipelines/04-similarity
+          - demos/pipelines/05-timed-push-buttons
     runs-on: ubuntu-latest
     name: Test ${{ matrix.demo }}
     steps:

@@ -14,7 +14,9 @@ demonstrate the use of PsyNet.
 
    01-exercises/01-running-a-demo
    01-exercises/02-pipelines
-   01-exercises/03-static-experiments-i
+   01-exercises/03-pages
+   01-exercises/04-control-flow
+   01-exercises/05-static-experiments-i
 
 .. toctree::
    :maxdepth: 2

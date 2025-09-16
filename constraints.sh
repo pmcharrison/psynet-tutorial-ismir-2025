@@ -7,7 +7,7 @@ curl -s https://raw.githubusercontent.com/Dallinger/Dallinger/master/dallinger/c
 
 if [ "$1" = "generate" ]; then
     echo "Copying requirements.txt and constraints.txt to demo directories..."
-    for demo_dir in demos/*/; do
+    for demo_dir in demos/*/*/; do
         if [ -d "$demo_dir" ]; then
             echo "Copying to $demo_dir"
             cp requirements.txt "$demo_dir"
