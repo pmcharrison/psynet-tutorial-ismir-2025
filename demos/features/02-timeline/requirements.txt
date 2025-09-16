@@ -1,0 +1,22 @@
+# Whenever you edit this file, you should run `bash constraints.sh generate`
+# to update the repository's constraints.txt files.
+
+# Note: This requirements.txt file is written to cover the whole
+# psynet-tutorial-ismir-2025 repository, not just individual demos.
+# If you were deploying one of these demos, you would update this requirements.txt
+# file to only include the dependencies for that demo.
+
+# We are pinning to some specific commits for PsyNet/Dallinger which
+# have unmerged changes.
+psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@caf93797de338c29151ecf89928d6ebcde8517ed#egg=psynet
+
+# Pinning to DT fix: https://github.com/Dallinger/Dallinger/pull/8107/commits
+dallinger==11.5.1
+
+# This is needed because PsyNet is missing this dependency
+sqlalchemy-postgres-copy
+
+repp@git+https://gitlab.com/computational-audition/repp.git@master#egg=repp
+step@git+https://github.com/pmcharrison/STEP.git#egg=step
+
+matplotlib

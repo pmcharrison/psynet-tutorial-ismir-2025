@@ -97,6 +97,46 @@ way to page makers, except they don't return an output. For example:
 
         CodeBlock(set_score)
 
+Arbitrary participant state information can be stored in ``participant.var``.
+There are two main ways of getting information from pages to ``participant.var``.
+One is to use ``participant.answer`` as an intermediate representation:
+
+.. code-block:: python
+
+    from psynet.timeline import CodeBlock, Timeline
+    from psynet.modular_page import ModularPage, PushButtonControl
+
+    Timeline(
+        ModularPage(
+            "color",
+            "What is your favorite color?",
+            PushButtonControl(choices=["red", "green", "blue"]),
+            time_estimate=10,
+        )
+        CodeBlock(lambda participant: participant.var.set(
+            "favorite_color", participant.answer
+        ))
+    )
+
+The other, simpler route is to use the page's ``save_answer`` parameter:
+
+.. code-block:: python
+
+    from psynet.timeline import Timeline
+    from psynet.modular_page import ModularPage, PushButtonControl
+
+    Timeline(
+        ModularPage(
+            "color",
+            "What is your favorite color?",
+            PushButtonControl(choices=["red", "green", "blue"]),
+            time_estimate=10,
+            save_answer="favorite_color",
+        ),
+    )
+
+
+
 Code execution
 --------------
 
@@ -167,5 +207,215 @@ Instead, the best way to achieve this functionality is by combining a code block
 
 This can all be summarized with the following principle:
 data that is specific to a given participant should be set in code blocks and read in page makers.
+
+Control logic
+-------------
+
+By default, participant proceed through timelines in serial order.
+However, PsyNet provides various control constructs that enable more complex ordering logic.
+
+Conditional
+^^^^^^^^^^^
+
+The conditional construct decides what timeline logic to administer based on a boolean expression.
+For example:
+
+.. code-block:: python
+
+    from psynet.timeline import conditional
+    from psynet.modular_page import ModularPage, PushButtonControl
+
+    Timeline(
+        ModularPage(
+            "choose_page",
+            "What page do you want to see next?"
+            PushButtonControl(choices=["page_1", "page_2"]),
+            save_answer="choose_page",
+        ),
+        conditional(
+            "choose_page",
+            lambda participant: participant.var.choose_page == "page_1",
+            logic_if_true=page_1,
+            logic_if_false=page_2,
+        )
+
+    )
+
+Switch
+^^^^^^
+
+The switch is a more advanced version of the conditional that is useful for choosing between more than two options:
+
+.. code-block:: python
+
+    from psynet.timeline import switch
+    from psynet.modular_page import ModularPage, PushButtonControl
+
+    Timeline(
+        ModularPage(
+            "choose_page",
+            "What page do you want to see next?"
+            PushButtonControl(choices=["page_1", "page_2", "page_3"]),
+            save_answer="choose_page",
+        ),
+        switch(
+            "choose_page",
+            lambda participant: participant.var.choose_page,
+            {
+                "page_1": page_1,
+                "page_2": page_2,
+                "page_3": page_3,
+            }
+        )
+    )
+
+While loop
+^^^^^^^^^^
+
+While loops repeatedly administer some logic while a given test condition is satisfied.
+In the following example, the while loop continues until ``randint`` returns a value greater than 5:
+
+.. code-block:: python
+
+    while_loop(
+        "my_loop",
+        lambda participant: participant.var.get("score", default=0) <= 5
+        logic=join(
+            CodeBlock(lambda participant: participant.var.set("score", random.randint(1, 10))),
+            conditional(
+                "feedback",
+                lambda participant: participant.var.score <= 5,
+                logic_if_true=InfoPage(f"You scored {participant.var.score}, bad luck.", time_estimate=5),
+                logic_if_false=InfoPage(f"You scored {participant.var.score}, well done!", time_estimate=5),
+            )
+        ),
+        expected_repetitions=2,
+    )
+
+Note that we have to tell ``while_loop`` how many repetitions we expect on average, so that it knows how much
+time to estimate for that part of the timeline.
+
+For loop
+^^^^^^^^
+
+For loops iterate over a list whose values are determined once the participant reaches that part in the timeline.
+For example:
+
+.. code-block:: python
+
+    from psynet.timeline import Timeline, for_loop
+    from psynet.modular_page, DropdownControl
+
+    Timeline(
+        ModularPage(
+            "target_number",
+            "What number would you like to count up to?",
+            DropdownControl([1, 2, 3, 4, 5]),
+            time_estimate=5,
+            save_answer="target_number",
+        ),
+        for_loop(
+            "counting",
+            lambda participant: list(range(1, participant.var.target_number + 1)),
+            lambda x: InfoPage(str(x), time_estimate=5),
+            time_estimate_per_iteration=5,
+            expected_repetitions=3,
+        )
+    )
+
+Note that, similar to ``while_loop``, we need to specify the number of expected repetitions so that PsyNet can estimate
+how long this part of the timeline will take.
+
+Time estimates
+--------------
+
+It is considered good practice to pay online participants a fee that corresponds
+approximately to a reasonable hourly wage, for example 10 GBP/hour.
+PsyNet provides sophisticated functionality for applying such
+payment schemes without rewarding participants to participate slowly.
+When designing an experiment, the researcher must specify along with each
+page a ``time_estimate`` argument, corresponding to the estimated time in seconds
+that a participant should take to complete that portion of the experiment.
+This ``time_estimate`` argument is used to construct a progress bar displaying
+the participant's progress through the experiment and to determine the participant's
+final payment.
+
+.. note::
+
+    If you want PsyNet not to display information about financial rewards to the participants,
+    you can set ``display_reward = false`` in your experiment's ``config.txt``.
+
+
+Combining elements
+------------------
+
+We normally define our timelines by defining a ``get_timeline`` function in ``experiment.py``
+and then saving the output of this function in our ``Experiment`` class.
+
+.. code-block:: python
+
+    # experiment.py
+
+    import psynet.experiment
+    from psynet.timeline import Timeline, CodeBlock, PageMaker
+    from psynet.page import InfoPage
+
+    def get_timeline():
+        return Timeline(
+            InfoPage("Welcome to the experiment!", time_estimate=5),
+
+            CodeBlock(lambda participant: participant.var.set(
+                "random_number",
+                random.randint(0, 100)
+            )),
+
+            PageMaker(
+                lambda participant: InfoPage(
+                    f"My random number is {participant.var.random_number}"
+                ),
+                time_estimate=5
+            ),
+        )
+
+Once your experiment gets complicated, it's usually a good idea to build the timeline up
+out of multiple intermediate objects. For example, you can write something like this:
+
+.. code-block:: python
+
+    import psynet.experiment
+    from psynet.timeline import join
+    from psynet.page import InfoPage
+
+    instructions = join(
+        InfoPage("First you will...", ...),
+        InfoPage("Then you will...", ...),
+        ...
+    )
+    debrief = join(
+        InfoPage("In this experiment you...", ...),
+        InfoPage("Your results will be helpful for...", ...),
+    )
+
+    def get_timeline():
+        return join(
+            instructions,
+            debrief,
+        )
+
+    class Exp(psynet.experiment.Experiment):
+        timeline = get_timeline()
+
+Note the use of the ``join`` function to create and merge sequences of timeline elements.
+
+Exercises
+---------
+
+Using the debugger
+^^^^^^^^^^^^^^^^^^
+
+
+
+Making a shopping game
+^^^^^^^^^^^^^^^^^^^^^^
 
 
