@@ -22,3 +22,4 @@ Features
    :numbered:
 
    features/01-pages
+   features/02-timeline

@@ -6,6 +6,7 @@ This is a simple experiment that allows participants to rate sounds on a scale o
 from pathlib import Path
 import psynet.experiment
 from psynet.asset import asset  # noqa
+from psynet.bot import Bot
 from psynet.modular_page import (
     AudioPrompt,
     ModularPage,
@@ -37,8 +38,8 @@ def get_timeline():
     return Timeline(
         InfoPage(
             """
-            In this experiment you will hear some sounds. Your task will be to rate
-            them on a scale of 1 to 5 on several scales.
+            In this experiment you will hear some sounds.
+            Your task will be to rate them from 1 to 5 on several scales.
             """,
             time_estimate=5,
         ),
@@ -49,9 +50,7 @@ def get_timeline():
             expected_trials_per_participant="n_nodes",
         ),
         InfoPage(
-            """
-            Thank you for your participation!
-            """,
+            "Thank you for your participation",
             time_estimate=5,
         ),
     )
@@ -104,3 +103,7 @@ def get_nodes():
 
 class Exp(psynet.experiment.Experiment):
     timeline = get_timeline()
+
+    def test_check_bot(self, bot: Bot, **kwargs):
+        super().test_check_bot(bot, **kwargs)
+        assert len(bot.alive_trials) == 6  # one for each instrument

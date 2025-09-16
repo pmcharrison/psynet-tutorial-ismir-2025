@@ -335,6 +335,79 @@ For example:
 Note that, similar to ``while_loop``, we need to specify the number of expected repetitions so that PsyNet can estimate
 how long this part of the timeline will take.
 
+Module
+------
+
+Modules are a tool for organizing timeline logic into discrete units.
+In addition to promoting better code organization, modules provide
+some utilities for tracking user progress through the experiment
+(see the ``Timeline`` tab in the dashboard).
+
+A module can be defined with code like the following:
+
+.. code-block:: python
+
+    from psynet.timeline import Module, PageMaker
+    from psynet.modular_page import ModularPage, NumberControl
+
+    weight_module = Module(
+        "weight",
+        ModularPage(
+            "weight",
+            "What is your weight in kg?",
+            NumberControl(),
+            time_estimate=5,
+            save_answer="weight",
+        ),
+        PageMaker(
+            lambda participant: InfoPage(
+                f"Your weight is {participant.var.weight} kg."
+            ),
+            time_estimate=5,
+        ),
+    )
+
+It can then be incorporated into the timeline just like any other timeline logic:
+
+.. code-block:: python
+
+    from psynet.timeline import Timeline
+
+    Timeline(
+        InfoPage("Welcome to the experiment!", time_estimate=5),
+        weight_module,
+    )
+
+It's also possible to store assets in a module:
+
+.. code-block:: python
+
+    audio_module = Module(
+        "audio",
+        PageMaker(
+            lambda assets: ModularPage(
+                "groovy",
+                AudioPrompt(
+                    assets["groovy"],
+                )
+            ),
+            time_estimate=10,
+        ),
+        assets={
+            "groovy": asset("/Users/dave/music/groovy.mp3")
+        }
+    )
+
+Note that the module's assets can then be accessed by the ``PageMaker``'s lambda function.
+
+.. note::
+
+    In this case, though, you could have equivalently placed ``groovy.mp3`` in ``static/``
+    and then pointed ``AudioPrompt`` to ``"static/groovy.mp3"``.
+    As discussed elsewhere, this approach works well for one-off assets, but doesn't scale
+    so well to large stimulus sets.
+
+
 Time estimates
 --------------
 
