@@ -22,7 +22,7 @@ def get_timeline():
             time_estimate=5,
         ),
         ModularPage(
-            "push_button_page",
+            label="push_button_page",
             prompt="""
             More complex pages are typically implemented as ModularPages,
             which allow you to combine arbitrary 'Prompts' with arbitrary 'Controls'.
@@ -36,7 +36,7 @@ def get_timeline():
             time_estimate=5,
         ),
         ModularPage(
-            "image_prompt",
+            label="image_prompt",
             prompt=ImagePrompt(
                 "static/images/lake_mirror_reflection_yosemite.jpg",
                 text="""
@@ -50,7 +50,7 @@ def get_timeline():
             time_estimate=5,
         ),
         ModularPage(
-            "audio_prompt",
+            label="audio_prompt",
             prompt=AudioPrompt(
                 "static/audio/clarinet.mp3",
                 text="""
@@ -62,8 +62,8 @@ def get_timeline():
             time_estimate=5,
         ),
         ModularPage(
-            "audio_prompt_and_record",
-            AudioPrompt(
+            label="audio_prompt_and_record",
+            prompt=AudioPrompt(
                 "static/audio/clarinet.mp3",
                 text="""
                 Here's a more complex example, where we play some audio and then record from the
@@ -71,11 +71,11 @@ def get_timeline():
                 """,
                 play_window=[0, 3.0]
             ),
-            AudioRecordControl(
+            control=AudioRecordControl(
                 duration=3.0,
                 bot_response_media="static/audio/clarinet.mp3",
             ),
-            time_estimate=5,
+            time_estimate=10.0,
             events={
                 "recordStart": Event(is_triggered_by="promptEnd", delay=0.5),
             },
