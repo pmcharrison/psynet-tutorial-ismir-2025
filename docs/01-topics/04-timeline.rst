@@ -135,6 +135,15 @@ The other, simpler route is to use the page's ``save_answer`` parameter:
         ),
     )
 
+If you want to define a dynamic variable that is shared across the entire experient,
+you can use ``experiment.var``:
+
+.. code-block:: python
+
+    from psynet.timeline import CodeBlock
+
+    CodeBlock(lambda experiment: experiment.var.set("random_number", random.randint(1, 10)))
+
 
 
 Code execution
