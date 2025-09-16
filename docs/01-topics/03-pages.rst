@@ -1,7 +1,7 @@
 Pages
 =====
 
-The pipelines exercise (see :doc:`02-pipelines`) introduced PsyNet experiments at a very high level.
+The :doc:`02-pipelines` exercise introduced PsyNet experiments at a very high level.
 We're now going to zoom in and start looking the individual building blocks that make up these experiments,
 starting with pages.
 
@@ -10,7 +10,7 @@ These ``Page`` objects are Python objects, all inheriting from the same ``Page``
 Under the hood, the crucial method is ``Page.render``, which returns the HTML for the participant's current page.
 If you wanted, you could customize this ``render`` method directly to make arbitrary pages.
 In practice, though, most people use helper classes (e.g. ``InfoPage``, ``ModularPage``) that
-provide pre-built implementations.
+provide pre-built implementations, and that's what we'll look at now.
 
 Info pages
 ----------
