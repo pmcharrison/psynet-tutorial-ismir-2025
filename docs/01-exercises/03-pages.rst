@@ -240,7 +240,49 @@ Further reading
 .. note::
 
     In a live tutorial we recommend skipping this section for now and moving onto the next topic.
-    You can always come back here later if you want to learn more.
+    However, we recommend coming back to this section before you run a real PsyNet experiment.
+
+Consent pages
+^^^^^^^^^^^^^
+
+Most academic institutions require experiments to obtain informed consent from the participant.
+This typically involves explaining the study to the participants and confirming that they are willing to take part.
+To define your own consent page, we recommend writing something like this:
+
+.. code-block:: python
+
+    from psynet.consent import Consent
+    from psynet.page import InfoPage
+
+    class CustomConsent(InfoPage, Consent):
+        consent_text = """
+        In this experiment you will be asked to ...
+
+        This experiment involves no risk beyond...
+
+        If you successfully complete the experiment, you will....
+        """
+
+        time_estimate = 60
+
+        def __init__():
+            return super().__init(consent_text, time_estimate=time_estimate)
+
+.. note::
+
+    When you deploy an experiment, PsyNet checks your timeline to see if you've included a consent,
+    and will throw an error if you haven't.
+
+
+End pages
+^^^^^^^^^
+
+**End pages** are used to signify the end of the experiment. There are two main types:
+``SuccessfulEndPage`` and ``UnsuccessfulEndPage``.
+Successful end pages do not normally need to be inserted explicitly; any participant who reaches
+the end of the timeline will be considered a successful completion.
+Unsuccessful end pages are more useful:
+we can use them to declare that a given participant has failed the experiment and needs to exit early.
 
 Custom classes
 ^^^^^^^^^^^^^^
@@ -340,10 +382,3 @@ PsyNet has a special event management system that is used to manage modular comp
 (e.g. audio or video recorders). Most users don't need to worry about it, but it might be useful if you
 get heavily into the customization side of PsyNet.
 To learn more, read PsyNet's `event management documentation <psynetdev.gitlab.io/PsyNet/tutorials/event_management.html>`_.
-
-
-Experiment implementations organize sequences of ``Page`` objects into *timelines*.
-The timeline is linear by default, meaning that the participant proceeds methodically from one page to the next
-until they reach the end of the experiment.
-However, more complex control flows are possible; we'll talk about those later in :doc:`04-control-flow`.
-
