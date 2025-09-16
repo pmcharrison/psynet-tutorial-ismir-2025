@@ -1,5 +1,5 @@
-Timeline
-========
+Timelines
+=========
 
 The timeline determines the sequential logic of the experiment.
 A timeline comprises a series of *timeline elements* that, by default, are
@@ -24,7 +24,7 @@ message to the participant, then displays them a randomly generated number:
         ),
     )
 
-We will now talk through these different kinds of components in turn.
+We will now go through these different kinds of components in turn.
 
 Timeline elements
 -----------------
@@ -410,12 +410,81 @@ Note the use of the ``join`` function to create and merge sequences of timeline 
 Exercises
 ---------
 
+Using automated testing
+^^^^^^^^^^^^^^^^^^^^^^^
+
+It can be time-consuming to test timeline logic once an experiment becomes long.
+Ultimately, a certain amount of manual testing will always be necessary to give you confidence
+in your implementation.
+However, PsyNet does provide some useful tools that can help you detect and fix errors early.
+
+One key tool is automated testing.
+In particular, PsyNet provides a default automated testing routine for every experiment
+where it simply runs a 'bot' participant from beginning to end and verifies that no errors occur.
+You can instruct such a test to run using the following command:
+
+.. code-block:: shell
+
+    psynet test local
+
+As naive as this test may be, it does catch a lot of basic implementation errors,
+and it can do so much faster than running ``psynet debug local`` and manually clicking through the experiment.
+Note however that it only tests the back-end logic, not the front-end.
+
+**Exercise**: run ``psynet test local` on the timeline demo (``demos/features/02-timeline``).
+
 Using the debugger
 ^^^^^^^^^^^^^^^^^^
 
+The debugger is an additional tool that complements the automated testing well.
+The process is as follows: you import the ``debugger`` function from ``psynet``,
+and then you call it inside the code you want to debug. For example:
+
+.. code-block:: python
+
+    from psynet import debugger
+
+    Timeline(
+        InfoPage("Welcome to the experiment!", time_estimate=5),
+
+        CodeBlock(lambda participant: participant.var.set(
+            "random_number",
+            random.randint(0, 100)
+        )),
+
+        PageMaker(
+            lambda participant: debugger()
+            time_estimate=5
+        ),
+    )
+
+Then run the experiment, either using ``psynet test local`` or ``psynet debug local``.
+If you are using VSCode/Cursor, and assuming your launch configuration is set up correctly
+(this repository automatically does that for you by providing a prepopulated ``.vscode/launch.json`` file in
+each experiment directory),
+then once the ``debugger()`` call is hit you will see a notice in the console to press F5 to begin debugging.
+This should drop you into VSCode's built-in debugger, allowing you to inspect the current variables and execute
+code in the debug console. This is a great way to improve your understanding of how your experiment is working.
+
+**Exercise**: insert a ``debugger()`` call in the timeline demo's timeline and use it to explore the local environment.
+
+.. note::
+
+    If you aren't using VSCode or Cursor you can use a different debugger instead.
+    Unfortunately standard IDE debuggers don't work out of the box because of the way that PsyNet uses subprocesses.
+    However, PyCharm's Python debug server works well, as does ``rpdb`` (which is platform agnostic).
 
 
 Making a shopping game
 ^^^^^^^^^^^^^^^^^^^^^^
 
+In this exercise your task is to design your own timeline that takes advantage of various control features in PsyNet. Here's
+the proposal: make a timeline that simulates the experience of going to the shop and buying some items. In particular,
+imagine you're a shop assistant asking the customer what they want. You give them a choice of items, you ask the
+customer how many items they want, and add these items to their virtual basket. You then loop round, asking them if they
+want to choose any more items, and so on. These items should all accumulate in the basket. Once the participant says
+they're done, tell them how much they need to pay.
 
+.. hint::
+
+    Start with the timeline demo (``demos/features/02-timeline``) and modify it to implement your app.
