@@ -1,3 +1,6 @@
+# Whenever you edit this file, you should run `bash constraints.sh generate`
+# to update the repository's constraints.txt files.
+
 # Note: This requirements.txt file is written to cover the whole
 # psynet-tutorial-ismir-2025 repository, not just individual demos.
 # If you were deploying one of these demos, you would update this requirements.txt
@@ -8,7 +11,7 @@
 psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@caf93797de338c29151ecf89928d6ebcde8517ed#egg=psynet
 
 # Pinning to DT fix: https://github.com/Dallinger/Dallinger/pull/8107/commits
-dallinger@git+https://github.com/Dallinger/Dallinger.git@329c661591883d684b3ac0f2cb3d5221294f3c4d#egg=dallinger
+dallinger==11.5.1
 
 # This is needed because PsyNet is missing this dependency
 sqlalchemy-postgres-copy
