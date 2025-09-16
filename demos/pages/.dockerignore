@@ -1,0 +1,8 @@
+# Specifying files here means that they will be not included in the 
+# deployed Docker image. The general principle is that the Docker image
+# is for source code; heavier files, like media assets, should not be included
+# in the Docker image but instead managed by PsyNet's asset system.
+
+# The data directory is the recommended location for heavy files like media assets.
+# We ignore it by default.
+data/
