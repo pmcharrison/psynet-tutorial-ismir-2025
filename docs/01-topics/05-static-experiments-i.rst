@@ -1,6 +1,15 @@
 Static experiments
 ==================
 
+Prerequisites
+-------------
+
+This chapter assumes you have read the preceding chapters (particularly :doc:`03-pages`);
+it also assumes you are familiar with Python subclassing and list comprehensions.
+
+Introduction
+------------
+
 In PsyNet, we define a *static experiment* as an experiment where the stimuli stay fixed over time.
 Many experiments fit into this mould, including several of our demos:
 
@@ -12,50 +21,92 @@ Many experiments fit into this mould, including several of our demos:
 PsyNet provides extensive support for implementing static experiments.
 There is some initial overhead in learning the relevant concepts, but once you are familiar with these,
 you will find you can implement a great variety of experiments very efficiently.
-What's more, many of these concepts generalize to more complex paradigms, such as chain experiments (see e.g. :doc:`03-step-tag <../02-demos/pipelines/03-step-tag>`).
+What's more, many of these concepts generalize to more complex paradigms,
+such as chain experiments (see e.g. :doc:`03-step-tag <../02-demos/pipelines/03-step-tag>`).
 
 Overview of concepts
 --------------------
 
 The implementation of static experiments in PsyNet relies on a collection of base classes:
 
-- ``StaticTrial``:
-  A trial typically represents a single event when a participant was presented with a stimulus and asked to provide a response.
 - ``StaticNode``:
-  A node typically provides the specification for a single stimulus.
+  A node provides the specification for a single stimulus.
+- ``StaticTrial``:
+  A trial represents a moment when a participant is presented with a stimulus and asked to provide a response.
 - ``StaticTrialMaker``:
-  The trial maker represents the point in the experiment timeline where the participant takes a collection of trials.
+  The trial maker determines the logic in which trials are presented to the participant.
+- ``Asset``:
+  Assets are used to represent media files.
 
 Experimenters customize these classes in various ways to define their experiment.
 In this chapter, we will talk through each of these classes in detail,
 using the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` pipeline as a starting point.
 
-Trial
+Nodes
 -----
 
-Every trial is associated with one participant and one parent node.
-By default, the trial inherits two key attributes from the node:
+Nodes specify the stimuli that will be presented to the participant.
+Each node contains two key attributes:
 
 - `definition` -
-  A dictionary stating the trial's definitive attributes, e.g. ``{"instrument": "clarinet"}``.
+  A dictionary of information about the stimulus, e.g. ``{"instrument": "clarinet"}``.
 - `assets` -
   An optional dictionary of assets (i.e. media files).
 
-We define our trial logic by subclassing PsyNet's ``StaticTrial`` class.
+In a static experiment, the nodes are typically specified by defining a ``get_nodes`` function
+that returns a list of nodes.
+In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` experiment,
+``get_nodes`` constructs a list comprehension over the ``.mp3`` files in ``data/instrument_sounds``:
 
-.. note::
+.. code-block:: python
 
-    Subclassing means making our own version of a pre-existing class
-    that customizes several key attributes or methods while leaving the others unchanged.
+    def get_nodes():
+        return [
+            StaticNode(
+                definition={
+                    "stimulus_name": path.stem
+                },
+                assets={
+                    "stimulus_audio": asset(path, cache=True),  # reuse the uploaded file between deployments
+                },
+            )
+            for path in STIMULUS_DIR.glob(STIMULUS_PATTERN)
+        ]
 
-There are two compulsory aspects of the class that need to be implemented:
+    STIMULUS_DIR = Path("data/instrument_sounds")
+    STIMULUS_PATTERN = "*.mp3"
+
+Nodes are implemented as database-backed objects using SQLAlchemy.
+This means that, when the experiment is running, you can see each node as a row in the database (see Dashboard > Database).
+There are several ways to access nodes when the experiment is running:
+
+.. code-block:: python
+
+    StaticNode.query.all()  # pull all nodes from the database
+    StaticNode.query.filter_by(trial_maker_id = )
+    trial.node  # get the node that the trial belongs to
+
+
+
+Trials
+------
+
+Every trial is associated with one participant and one parent node.
+The trial automatically inherits the ``definition`` and ``assets`` attributes from the node.
+
+When implementing a static experiment, we do not typically instantiate trials directly;
+we leave that up to the trial maker.
+However, we do need to define a custom trial class that determines the logic for the trial.
+This is done by subclassing PsyNet's ``StaticTrial`` class.
+
+When creating our custom subclass, we must implement two methods in particular:
 
 - ``show_trial`` -
   determines the page that is shown to the participant.
 - ``time_estimate`` -
   estimates the duration of the trial in seconds.
 
-In addition, there are several optional aspects that can be implemented:
+We can achieve further customization if we want by implementing the following:
 
 - ``finalize_definition`` -
   customizes the trial's definition over and above what is inherited from the node.
@@ -108,54 +159,102 @@ Here's how it's done:
                 },
             )
 
-Nodes
------
-
-Nodes determine the structure of static experiments (and indeed chain experiments, when we get to them).
-A node is an object that generates trials of a specified kind.
-
-Trial makers are typically initialized with collections of nodes.
-In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` experiment,
-these nodes are generated by the ``get_nodes`` function:
+Like nodes, trials are implemented as database-backed objects using SQLAlchemy,
+and you can query them like this:
 
 .. code-block:: python
 
-    STIMULUS_DIR = Path("data/instrument_sounds")
-    STIMULUS_PATTERN = "*.mp3"
+    CustomTrial.query.all()  # pull all trials from the database
 
-    def get_nodes():
-        return [
-            StaticNode(
-                definition={
-                    "stimulus_name": path.stem
-                },
-                assets={
-                    "stimulus_audio": asset(path, cache=True),  # reuse the uploaded file between deployments
-                },
-            )
-            for path in STIMULUS_DIR.glob(STIMULUS_PATTERN)
-        ]
 
-.. note::
+Trial makers
+------------
 
-    This is an example of *list comprehension* syntax, something which is fairly idiosyncratic to Python.
-    If it's not familiar, we recommend learning about it online before proceeding further.
+The trial maker orchestrates the presentation of trials to the participant.
+In the case of static experiments, we use the ``StaticTrialMaker`` class.
+We instantiate the trial maker directly within the timeline:
 
-Here we've generated one node per audio file by listing the ``.mp3`` files in ``data/instrument_sounds``.
+.. code-block:: python
 
-The nodes have two important properties:
+    def get_timeline():
+        return Timeline(
+            InfoPage(
+                """
+                In this experiment you will hear some sounds.
+                Your task will be to rate them from 1 to 5 on several scales.
+                """,
+                time_estimate=5,
+            ),
+            StaticTrialMaker(
+                id_="ratings",
+                trial_class=CustomTrial,
+                nodes=get_nodes,
+                expected_trials_per_participant="n_nodes",
+            ),
+            InfoPage(
+                "Thank you for your participation",
+                time_estimate=5,
+            ),
+        )
 
-- ``definition`` -
-  The definition should be a dictionary that contains the key attributes that define the stimulus.
-  Here we have just stored one attribute in the definition, the stimulus name, which will just be used
-  for keeping track of which node is which.
-  However, we could store additional parameters here that could be fed into the ``show_trial`` method when it is called.
-- ``assets`` -
-  The assets parameter meanwhile is an optional dictionary that defines the assets (i.e. media files) that will be
-  assigned to the node. When the experiment is launched these assets will be compiled and uploaded to the remote storage.
+Assets
+------
 
-By default, trials inherit the ``definition`` and ``assets`` attributes of their parent nodes.
-However, it is also possible for trials to modify these attributes, so as to provide some variation.
+Assets are PsyNet's way of representing and managing media files.
+There are two main types of assets:
+assets created from local files, and assets created from functions.
+In both cases,
+
+Local file assets
+^^^^^^^^^^^^^^^^^
+
+A local file asset can be registered by passing a file path to the ``asset`` function.
+
+
+
+
+Assets are typically produced using the ``asset`` function, like this:
+
+.. code-block:: python
+
+    # Creating an asset from a local file
+    a = asset("data/audio_stimulus.mp3")
+
+    # Creating an asset from a URL
+    b = asset("https://example.com/audio_stimulus.mp3")
+
+    # Creating an asset from a function
+    c = asset(generate_stimulus, extension=".wav", arguments={"pan": 0.0, "volume": 1.0})
+
+As illustrated above, assets can be created from local files, URLs, or functions.
+
+
+
+
+Just creating an asset object like this doesn't actually do anything;
+the asset needs to be deposited first.
+Depositing can be done manually by calling ``a.deposit()``.
+However, in most situations one shouldn't need to do this manually.
+If pre-defining assets as part of the timeline initialization, then it is sufficient to pass the
+asset objects to the ``assets`` parameter of nodes, trial makers, or modules.
+If defining assets on the fly as part of a trial, then one would typically call
+``trial.add_assets`` instead.
+
+In the context of ``show_trial``, assets can be accessed via the ``self.assets`` attribute of the trial.
+These assets can then be passed directly to modular page prompts such as
+``AudioPrompt`` or ``VideoPrompt``.
+Alternatively, one can extract the public URL from ``asset.url``, and use this directly.
+
+You can see what assets have been defined for your experiment by visiting the
+Asset tabs in the dashboard's Database section.
+You can also see how these files are being organized by inspecting the contents of ``~/psynet-data/assets``,
+which is the default location for asset storage assuming that you haven't switched away
+from the default 'local storage' configuration.
+
+Advanced usage
+--------------
+
+
 
 To vary the definition on the trial level, we override the ``finalize_definition`` method of our custom Trial class.
 For example, if we wanted to vary the volume and the pan slightly from trial to trial,
@@ -208,43 +307,6 @@ providing as arguments the path for the desired output file as well as the conte
 We use ``self.node.assets`` to access the parent node's assets,
 and then use ``wavfile.read`` to read the original audio file.
 We then apply the pan and volume adjustments to the audio, and write the result to the desired output file.
-
-Assets
-------
-
-We've seen a few references to assets already. As you might have read earlier, assets are PsyNet's way of
-representing and managing media files. Assets are typically produced using the ``asset`` function, like this:
-
-.. code-block:: python
-
-    # Creating an asset from a local file
-    a = asset("data/audio_stimulus.mp3")
-
-    # Creating an asset from a URL
-    b = asset("https://example.com/audio_stimulus.mp3")
-
-    # Creating an asset from a function
-    c = asset(generate_stimulus, extension=".wav", arguments={"pan": 0.0, "volume": 1.0})
-
-Just creating an asset object like this doesn't actually do anything;
-the asset needs to be deposited first.
-Depositing can be done manually by calling ``a.deposit()``.
-However, in most situations one shouldn't need to do this manually.
-If pre-defining assets as part of the timeline initialization, then it is sufficient to pass the
-asset objects to the ``assets`` parameter of nodes, trial makers, or modules.
-If defining assets on the fly as part of a trial, then one would typically call
-``trial.add_assets`` instead.
-
-In the context of ``show_trial``, assets can be accessed via the ``self.assets`` attribute of the trial.
-These assets can then be passed directly to modular page prompts such as
-``AudioPrompt`` or ``VideoPrompt``.
-Alternatively, one can extract the public URL from ``asset.url``, and use this directly.
-
-You can see what assets have been defined for your experiment by visiting the
-Asset tabs in the dashboard's Database section.
-You can also see how these files are being organized by inspecting the contents of ``~/psynet-data/assets``,
-which is the default location for asset storage assuming that you haven't switched away
-from the default 'local storage' configuration.
 
 Blocks
 ------
@@ -369,35 +431,7 @@ something like this:
 
 The function should return a string corresponding to the group chosen for that participant.
 
-Trial makers
-------------
 
-The trial maker orchestrates the presentation of trials to the participant.
-In the case of static experiments, we use the ``StaticTrialMaker`` class.
-We instantiate the trial maker directly within the timeline:
-
-.. code-block:: python
-
-    def get_timeline():
-        return Timeline(
-            InfoPage(
-                """
-                In this experiment you will hear some sounds.
-                Your task will be to rate them from 1 to 5 on several scales.
-                """,
-                time_estimate=5,
-            ),
-            StaticTrialMaker(
-                id_="ratings",
-                trial_class=CustomTrial,
-                nodes=get_nodes,
-                expected_trials_per_participant="n_nodes",
-            ),
-            InfoPage(
-                "Thank you for your participation",
-                time_estimate=5,
-            ),
-        )
 
 Note how we have provided the trial maker with both the list of nodes and the customized trial class.
 
