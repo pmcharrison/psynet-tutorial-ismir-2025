@@ -90,7 +90,7 @@ There are several ways to access nodes when the experiment is running:
 Trials
 ------
 
-Every trial is associated with one participant and one parent node.
+Every trial is associated with one participant and one node.
 The trial automatically inherits the ``definition`` and ``assets`` attributes from the node.
 
 When implementing a static experiment, we do not typically instantiate trials directly;
@@ -103,7 +103,7 @@ When creating our custom subclass, we must implement two methods in particular:
 - ``show_trial`` -
   determines the page that is shown to the participant.
 - ``time_estimate`` -
-  an estimated duration for that class of trials.
+  an estimated duration for that class of trials, specified in seconds.
 
 We can achieve further customization by implementing the following optional methods:
 
@@ -267,7 +267,7 @@ assets created from local files, and assets created from functions.
 Both kinds can be created with the ``asset`` function.
 
 Local file assets
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 Local file assets are created from existing files by passing the file path to ``asset``:
 
@@ -278,7 +278,7 @@ Local file assets are created from existing files by passing the file path to ``
 When the asset is deposited, PsyNet will ensure that a copy of this file exists in the app's storage service.
 
 Function assets
-^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~
 
 Function assets are created by passing a function to ``asset``:
 
@@ -288,10 +288,39 @@ Function assets are created by passing a function to ``asset``:
 
 This function should accept a ``path`` argument corresponding to the path 
 of the file to generate.
-It can also request arguments that are keys in the node or trial's definition.
+It can also request arguments that are keys in the node or trial's definition;
+we will see an example below.
 
-When the asset is deposited, PsyNet will run the function and deposit the output
-in the app's storage service.
+Placing assets
+~~~~~~~~~~~~~~
+
+In the context of static experiments, there are three main places to put assets: in nodes, in trials, and in trial makers.
+
+Placing assets in nodes
+^^^^^^^^^^^^^^^^^^^^^^^
+
+As discussed above, we typically define our nodes in a ``get_nodes`` function
+and pass this function to a trial maker.
+We can include assets in these nodes and PsyNet will upload these assets 
+during experiment deployment.
+
+If using a function asset in this context, you can include keys from the node definition in the function signature and these parts of the definition will be passed to the function.
+In the following example, we use this technique to populate the ``f0`` argument:
+
+.. code-block:: python
+
+    def synth_tone(path, f0, duration=1.0):
+        ...
+
+    node = StaticNode(
+        definition={"f0": 400},
+        assets={
+            "tone": asset(synth_tone)
+        }
+    )
+
+TODo
+
 
 Just creating an asset object like this doesn't actually do anything;
 the asset needs to be deposited first.
