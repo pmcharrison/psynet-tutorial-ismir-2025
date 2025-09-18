@@ -26,11 +26,11 @@ Overview of concepts
 The implementation of static experiments in PsyNet relies on a collection of base classes:
 
 - ``StaticTrial``:
-  A trial typically involves presenting a stimulus to the participant and recording a response.
+  A trial represents a single event when a participant was presented with a stimulus and asked to provide a response.
 - ``StaticNode``:
-  Each node typically represents a single stimulus, or sometimes a class of related stimuli.
+  A node provides the specification for a single stimulus.
 - ``StaticTrialMaker``:
-  The trial maker orchestrates the presentation of trials to the participant.
+  The trial maker represents the point in the experiment timeline where the participant takes a collection of trials.
 
 Experimenters customize these classes in various ways to define their experiment.
 In this chapter, we will talk through each of these classes in detail,
