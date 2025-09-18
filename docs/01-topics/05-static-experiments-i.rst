@@ -339,7 +339,18 @@ Another situation in which trials can have individual assets is when
 we use an ``AudioRecordControl`` or a ``VideoRecordControl``.
 In this case an asset will automatically be created for the participant's recording.
 
-Placing trials in trial makers
+Placing assets in trial makers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sometimes we want to share the same asset among multiple nodes.
+In this case we should not place the assets inside individual nodes,
+but instead we should pass them to the trial maker. Here's an example:
+
+.. code-block:: python
+
+    trial_maker = StaticTrialMaker(
+        assets={
+            
 
 todo
 
