@@ -77,7 +77,8 @@ In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` experiment,
     STIMULUS_PATTERN = "*.mp3"
 
 Nodes are implemented as database-backed objects using SQLAlchemy.
-This means that, when the experiment is running, you can see each node as a row in the database (see Dashboard > Database).
+This means that, when the experiment is running, you can see each node as a row in the database (see the Database tab in the dashboard).
+
 There are several ways to access nodes when the experiment is running:
 
 .. code-block:: python
@@ -95,14 +96,14 @@ The trial automatically inherits the ``definition`` and ``assets`` attributes fr
 When implementing a static experiment, we do not typically instantiate trials directly;
 we leave that up to the trial maker.
 However, we do need to define a custom trial class that determines the logic for the trial.
-This is done by subclassing PsyNet's ``StaticTrial`` class.
+This is done by subclassing PsyNet's ``StaticTrial`` class. We'll see an example in a moment.
 
 When creating our custom subclass, we must implement two methods in particular:
 
 - ``show_trial`` -
   determines the page that is shown to the participant.
 - ``time_estimate`` -
-  estimates the duration of the trial in seconds.
+  an estimated duration for that class of trials.
 
 We can achieve further customization if we want by implementing the following:
 
