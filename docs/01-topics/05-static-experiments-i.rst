@@ -105,7 +105,7 @@ When creating our custom subclass, we must implement two methods in particular:
 - ``time_estimate`` -
   an estimated duration for that class of trials.
 
-We can achieve further customization if we want by implementing the following:
+We can achieve further customization by implementing the following optional methods:
 
 - ``finalize_definition`` -
   customizes the trial's definition over and above what is inherited from the node.
@@ -119,7 +119,7 @@ We can achieve further customization if we want by implementing the following:
 Some of these will be discussed in more detail later in this chapter.
 
 In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` demo,
-only the ``show_trial`` and ``time_estimate`` methods are implemented.
+only the ``time_estimate`` and ``show_trial`` methods are implemented.
 Here's how it's done:
 
 .. code-block:: python
@@ -167,9 +167,6 @@ Within a running experiment, you can access trials in various ways:
     node.all_trials # get all trials for a node
     participant.all_trials # get all trials for a participant
 
-Unlike nodes and trials, trial makers are not represented directly in the database,
-though they are referred to in database rows like ``Node.trial_maker_id`` and ``Trial.trial_maker_id``.
-
 Trial makers
 ------------
 
@@ -200,6 +197,59 @@ We instantiate the trial maker directly within the timeline:
             ),
         )
 
+There are three compulsory parameters for instantiating a static trial maker:
+
+- ``id_`` -
+  A string providing a unique identifier for the trial maker.
+- ``trial_class` -
+  the custom trial subclass to use (see above).
+- ``nodes`` -
+  the ``get_nodes`` function that will generate our list of nodes (see above).
+- ``expected_trials_per_participant`` -
+  the number of trials we expect the average participant to take
+  (used for time estimation),
+  specified either as an integer or the string
+  ``"n_nodes"`` (shorthand for the number of nodes in the trial maker). 
+
+There are many other optional parameters available for achieving further customization. Here are a few key ones:
+
+- ``max_trials_per_participant``
+    Maximum number of trials that each participant may complete (optional);
+    once this number is reached, the participant will move on
+    to the next stage in the timeline.
+    This can either be an integer, or the string ``"n_nodes"``,
+    which will be read as referring to the number of provided nodes.
+- ``max_trials_per_block``
+    Determines the maximum number of trials that a participant will be allowed to experience in each block,
+    including failed trials. Note that this number does not include repeat trials.
+- ``allow_repeated_nodes``
+    Determines whether the participant can be administered the same node more than once.
+- ``max_unique_nodes_per_block``
+    Determines the maximum number of unique nodes that a participant will be allowed to experience
+    in each block. Once this quota is reached, the participant will be forced to repeat
+    previously experienced nodes.
+- ``balance_across_nodes``
+    If ``True`` (default), active balancing across participants is enabled, meaning that
+    node selection favours nodes that have been presented fewest times to any participant
+    in the experiment, excluding failed trials.
+- ``check_performance_at_end``
+    If ``True``, the participant's performance
+    is evaluated at the end of the series of trials (see ``TrialMaker.performance_check``).
+    Defaults to ``False``.
+- ``check_performance_every_trial``
+    If ``True``, the participant's performance
+    is evaluated after each trial (see ``TrialMaker.performance_check``).
+    Defaults to ``False``.
+- ``n_repeat_trials``
+    Number of repeat trials to present to the participant. These trials
+    are typically used to estimate the reliability of the participant's
+    responses. Repeat trials are presented at the end of the trial maker,
+    after all blocks have been completed.
+    Defaults to 0.
+
+Unlike nodes and trials, trial makers are not represented directly in the database,
+though they are referred to in database rows like ``Node.trial_maker_id`` and ``Trial.trial_maker_id``.
+
 Assets
 ------
 
@@ -212,8 +262,6 @@ Local file assets
 ^^^^^^^^^^^^^^^^^
 
 A local file asset can be registered by passing a file path to the ``asset`` function.
-
-
 
 
 Assets are typically produced using the ``asset`` function, like this:
@@ -448,51 +496,6 @@ Note how we have provided the trial maker with both the list of nodes and the cu
     That means that the file listing code will throw a ``FileNotFoundError`` if we run it on the experiment server.
     To get around this, we wrap it in a callable, meaning that it is only executed when required
     (i.e. in the pre-deploy phase, when uploading the experiment to the server).
-
-There are a variety of other parameters that can be passed to the static trial maker.
-Some of these are compulsory; others provide optional avenues for customization.
-Here's a list of some key parameters, but for the full set, you should inspect the
-static trial maker documentation.
-
-- ``expected_trials_per_participant``
-    Expected number of trials that each participant will complete.
-    This is used for timeline/progress estimation purposes.
-    This can either be an integer, or the string ``"n_nodes"``,
-    which will be read as referring to the number of provided nodes.
-- ``max_trials_per_participant``
-    Maximum number of trials that each participant may complete (optional);
-    once this number is reached, the participant will move on
-    to the next stage in the timeline.
-    This can either be an integer, or the string ``"n_nodes"``,
-    which will be read as referring to the number of provided nodes.
-- ``max_trials_per_block``
-    Determines the maximum number of trials that a participant will be allowed to experience in each block,
-    including failed trials. Note that this number does not include repeat trials.
-- ``allow_repeated_nodes``
-    Determines whether the participant can be administered the same node more than once.
-- ``max_unique_nodes_per_block``
-    Determines the maximum number of unique nodes that a participant will be allowed to experience
-    in each block. Once this quota is reached, the participant will be forced to repeat
-    previously experienced nodes.
-- ``balance_across_nodes``
-    If ``True`` (default), active balancing across participants is enabled, meaning that
-    node selection favours nodes that have been presented fewest times to any participant
-    in the experiment, excluding failed trials.
-- ``check_performance_at_end``
-    If ``True``, the participant's performance
-    is evaluated at the end of the series of trials (see ``TrialMaker.performance_check``).
-    Defaults to ``False``.
-- ``check_performance_every_trial``
-    If ``True``, the participant's performance
-    is evaluated after each trial (see ``TrialMaker.performance_check``).
-    Defaults to ``False``.
-- ``n_repeat_trials``
-    Number of repeat trials to present to the participant. These trials
-    are typically used to estimate the reliability of the participant's
-    responses. Repeat trials are presented at the end of the trial maker,
-    after all blocks have been completed.
-    Defaults to 0.
-
 
 Scoring responses
 -----------------
