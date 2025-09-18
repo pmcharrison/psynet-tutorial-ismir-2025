@@ -83,10 +83,8 @@ There are several ways to access nodes when the experiment is running:
 .. code-block:: python
 
     StaticNode.query.all()  # pull all nodes from the database
-    StaticNode.query.filter_by(trial_maker_id = )
+    StaticNode.query.filter_by(trial_maker_id = "xxx").all()  # get all nodes for trial maker xxx
     trial.node  # get the node that the trial belongs to
-
-
 
 Trials
 ------
@@ -159,13 +157,17 @@ Here's how it's done:
                 },
             )
 
-Like nodes, trials are implemented as database-backed objects using SQLAlchemy,
-and you can query them like this:
+Like nodes, trials are implemented as database-backed objects using SQLAlchemy.
+Within a running experiment, you can access trials in various ways:
 
 .. code-block:: python
 
     CustomTrial.query.all()  # pull all trials from the database
+    node.all_trials # get all trials for a node
+    participant.all_trials # get all trials for a participant
 
+Unlike nodes and trials, trial makers are not represented directly in the database,
+though they are referred to in database rows like ``Node.trial_maker_id`` and ``Trial.trial_maker_id``.
 
 Trial makers
 ------------
