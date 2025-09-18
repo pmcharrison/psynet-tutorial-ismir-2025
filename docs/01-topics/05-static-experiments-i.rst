@@ -33,14 +33,44 @@ using the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` pipeline
 Trial
 -----
 
-As mentioned above, a trial typically involves presenting a single stimulus to a participant
-and recording their response.
-This can often be accomplished using a single modular page,
-but it is also possible to use multiple pages in the same trial.
+Every trial is associated with one participant and one parent node.
+By default, the trial inherits two key attributes from the node:
 
-We implement custom trial designs by subclassing PsyNet's ``StaticTrial`` class.
-Here's how it's done in the 
-:doc:`simple rating <../02-demos/pipelines/01-simple-rating>` demo:
+- `definition` -
+  A dictionary stating the trial's definitive attributes, e.g. ``{"instrument": "clarinet"}``.
+- `assets` -
+  An optional dictionary of assets (i.e. media files).
+
+We define our trial logic by subclassing PsyNet's ``StaticTrial`` class.
+
+.. note::
+
+    Subclassing means making our own version of a pre-existing class
+    that customizes several key attributes or methods while leaving the others unchanged.
+
+There are two compulsory aspects of the class that need to be implemented:
+
+- ``show_trial`` -
+  determines the page that is shown to the participant.
+- ``time_estimate`` -
+  estimates the duration of the trial in seconds.
+
+In addition, there are several optional aspects that can be implemented:
+
+- ``finalize_definition`` -
+  customizes the trial's definition over and above what is inherited from the node.
+- ``score_answer`` -
+  assigns a score to the participant's response.
+- ``show_feedback`` -
+  determines the page that is shown to the participant after the trial.
+- ``analyze_recording`` -
+  analyzes any recordings made during the trial.
+
+Some of these will be discussed in more detail later in this chapter.
+
+In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` demo,
+only the ``show_trial`` and ``time_estimate`` methods are implemented.
+Here's how it's done:
 
 .. code-block:: python
 
@@ -77,35 +107,6 @@ Here's how it's done in the
                     "submitEnable": Event(is_triggered_by="promptEnd"),
                 },
             )
-
-.. note::
-
-    Subclassing means making our own version of a pre-existing class
-    that customizes several key attributes or methods while leaving the others unchanged.
-
-There are several attributes and methods available for customizing in ``Trial`` subclasses:
-
-- ``time_estimate`` -
-  estimates the duration of the trial in seconds.
-
-
-Here we have done two things:
-we have provided a ``time_estimate`` parameter, estimating the duration of the trial in seconds,
-and we have provided a ``show_trial`` method, which determines the page that is shown to the participant.
-In this case, the ``show_trial`` method returns a fairly simple modular page (see :doc:`03-pages`).
-
-Every trial is associated with one participant and one parent node.
-By default, the trial inherits two key attributes from the node:
-
-- `definition` -
-  A dictionary stating the trial's definitive attributes, e.g. ``{"instrument": "clarinet"}``.
-- `assets` - 
-  An optional dictionary of assets (i.e. media files).
-
-Note how, in the above example, ``show_trial`` uses `self.assets["stimulus_audio"]`
-to determine what audio to play.
-
-We'll now talk more about nodes and how their contents are defined.
 
 Nodes
 -----
