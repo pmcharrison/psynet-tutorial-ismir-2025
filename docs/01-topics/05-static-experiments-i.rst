@@ -201,7 +201,7 @@ There are three compulsory parameters for instantiating a static trial maker:
 
 - ``id_`` -
   A string providing a unique identifier for the trial maker.
-- ``trial_class` -
+- ``trial_class`` -
   the custom trial subclass to use (see above).
 - ``nodes`` -
   the ``get_nodes`` function that will generate our list of nodes (see above).
@@ -211,10 +211,10 @@ There are three compulsory parameters for instantiating a static trial maker:
   specified either as an integer or the string
   ``"n_nodes"`` (shorthand for the number of nodes in the trial maker). 
 
-There are many other optional parameters available for achieving further customization. Here are a few key ones:
+There are many other optional parameters available too. See in particular:
 
 - ``max_trials_per_participant``
-    Maximum number of trials that each participant may complete (optional);
+    Maximum number of trials that each participant may complete;
     once this number is reached, the participant will move on
     to the next stage in the timeline.
     This can either be an integer, or the string ``"n_nodes"``,
@@ -234,11 +234,11 @@ There are many other optional parameters available for achieving further customi
     in the experiment, excluding failed trials.
 - ``check_performance_at_end``
     If ``True``, the participant's performance
-    is evaluated at the end of the series of trials (see ``TrialMaker.performance_check``).
+    is evaluated at the end of the series of trials (see below for more information on performance checks).
     Defaults to ``False``.
 - ``check_performance_every_trial``
     If ``True``, the participant's performance
-    is evaluated after each trial (see ``TrialMaker.performance_check``).
+    is evaluated after each trial.
     Defaults to ``False``.
 - ``n_repeat_trials``
     Number of repeat trials to present to the participant. These trials
@@ -249,6 +249,14 @@ There are many other optional parameters available for achieving further customi
 
 Unlike nodes and trials, trial makers are not represented directly in the database,
 though they are referred to in database rows like ``Node.trial_maker_id`` and ``Trial.trial_maker_id``.
+During a running experiment, it is possible to access a given trial maker
+with the following code:
+
+.. code-block:: python
+
+    from psynet.experiment import get_trial_maker
+
+    get_trial_maker("xxx") # get the trial maker with ID "xxx"
 
 Assets
 ------
@@ -256,31 +264,34 @@ Assets
 Assets are PsyNet's way of representing and managing media files.
 There are two main types of assets:
 assets created from local files, and assets created from functions.
-In both cases,
+Both kinds can be created with the ``asset`` function.
 
 Local file assets
 ^^^^^^^^^^^^^^^^^
 
-A local file asset can be registered by passing a file path to the ``asset`` function.
-
-
-Assets are typically produced using the ``asset`` function, like this:
+Local file assets are created from existing files by passing the file path to ``asset``:
 
 .. code-block:: python
 
-    # Creating an asset from a local file
     a = asset("data/audio_stimulus.mp3")
 
-    # Creating an asset from a URL
-    b = asset("https://example.com/audio_stimulus.mp3")
+When the asset is deposited, PsyNet will ensure that a copy of this file exists in the app's storage service.
 
-    # Creating an asset from a function
-    c = asset(generate_stimulus, extension=".wav", arguments={"pan": 0.0, "volume": 1.0})
+Function assets
+^^^^^^^^^^^^^^^
 
-As illustrated above, assets can be created from local files, URLs, or functions.
+Function assets are created by passing a function to ``asset``:
 
+.. code-block:: python
 
+    a = asset(generate_stimulus)
 
+This function should accept a ``path`` argument corresponding to the path 
+of the file to generate.
+It can also request arguments that are keys in the node or trial's definition.
+
+When the asset is deposited, PsyNet will run the function and deposit the output
+in the app's storage service.
 
 Just creating an asset object like this doesn't actually do anything;
 the asset needs to be deposited first.
