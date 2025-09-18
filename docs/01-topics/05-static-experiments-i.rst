@@ -319,7 +319,29 @@ In the following example, we use this technique to populate the ``f0`` argument:
         }
     )
 
-TODo
+Placing assets in trials
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Normally trials inherit their assets from their parent nodes.
+However, sometimes we want to introduce surface variation between trials from the same node,
+and so we need each trial to have its own assets.
+We achieve this by using the trial's ``add_assets`` method:
+
+.. code-block:: python
+
+    trial.add_assets({
+        "tone": asset(synth_tone)
+    })
+
+Normally this would happen within the trial's ``finalize_definition`` method; see below for an explanation of how to use this method.
+
+Another situation in which trials can have individual assets is when
+we use an ``AudioRecordControl`` or a ``VideoRecordControl``.
+In this case an asset will automatically be created for the participant's recording.
+
+Placing trials in trial makers
+
+todo
 
 
 Just creating an asset object like this doesn't actually do anything;
