@@ -38,7 +38,9 @@ and recording their response.
 This can often be accomplished using a single modular page,
 but it is also possible to use multiple pages in the same trial.
 
-We implement custom trial designs by subclassing PsyNet's ``StaticTrial`` class:
+We implement custom trial designs by subclassing PsyNet's ``StaticTrial`` class.
+Here's how it's done in the 
+:doc:`simple rating <../02-demos/pipelines/01-simple-rating>` demo:
 
 .. code-block:: python
 
@@ -75,6 +77,17 @@ We implement custom trial designs by subclassing PsyNet's ``StaticTrial`` class:
                     "submitEnable": Event(is_triggered_by="promptEnd"),
                 },
             )
+
+.. note::
+
+    Subclassing means making our own version of a pre-existing class
+    that customizes several key attributes or methods while leaving the others unchanged.
+
+There are several attributes and methods available for customizing in ``Trial`` subclasses:
+
+- ``time_estimate`` -
+  estimates the duration of the trial in seconds.
+
 
 Here we have done two things:
 we have provided a ``time_estimate`` parameter, estimating the duration of the trial in seconds,
