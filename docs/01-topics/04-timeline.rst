@@ -42,14 +42,14 @@ when the participant's web page loads.
 for example to assign the participant to a group or to save the participant's data.
 
 Pages
-^^^^^
+~~~~~
 
 Pages define the web page that is shown to the participant at a given
 point in time, and have fixed content that is the same for all participants.
 We covered them in detail in the previous topic, :doc:`03-pages`.
 
 Page makers
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 Ordinary pages in the timeline have fixed content that is shared between all participants.
 Often, however, we want to present content that depends on the state of the current participant.
@@ -72,7 +72,7 @@ For example, a simple page maker might look like the following:
 
 
 Code blocks
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 Code blocks define code that is executed in between pages. They are defined in a similar
 way to page makers, except they don't return an output. For example:
@@ -85,40 +85,42 @@ way to page makers, except they don't return an output. For example:
         lambda participant: participant.var.set("score", 10)
     )
 
-.. note::
-
-    If you want to put a complex function in a code block then the lambda format above many not be appropriate.
-    Instead you can use a named function:
-
-    .. code-block:: python
-
-        def set_score(participant):
-            participant.var.set("score", 10)
-
-        CodeBlock(set_score)
-
-Arbitrary participant state information can be stored in ``participant.var``.
-There are two main ways of getting information from pages to ``participant.var``.
-One is to use ``participant.answer`` as an intermediate representation:
+For multi-line functions, you can use a named function instead of a lambda:
 
 .. code-block:: python
 
-    from psynet.timeline import CodeBlock, Timeline
-    from psynet.modular_page import ModularPage, PushButtonControl
+    def update_scores(participant):
+        participant.var.set("score_1", 10)
+        participant.var.set("score_2", 20)
 
-    Timeline(
-        ModularPage(
-            "color",
-            "What is your favorite color?",
-            PushButtonControl(choices=["red", "green", "blue"]),
-            time_estimate=10,
-        )
-        CodeBlock(lambda participant: participant.var.set(
-            "favorite_color", participant.answer
-        ))
-    )
+    CodeBlock(update_scores)
 
-The other, simpler route is to use the page's ``save_answer`` parameter:
+By default, code blocks will be executed in the process of the participant navigating to the next web page.
+If the function takes a long time to execute, we recommend instead using an ``AsyncCodeBlock``;
+the function will then be executed in a separate process, and the participant will be shown a waiting page
+until the function has finished executing.
+
+Storing state
+~~~~~~~~~~~~~
+
+Participant state
+^^^^^^^^^^^^^^^^^
+
+It is possible to store arbitrary participant-specific state in ``participant.var``.
+
+.. code-block:: python
+
+    participant.var.color = "red"
+    participant.color # "red"
+
+If you want to store state in a code block's lambda function, you will have to use
+``participant.var.set`` instead (lambdas aren't allowed to use the ``=`` operator).
+
+.. code-block:: python
+
+    CodeBlock(lambda participant: participant.var.set("color", "red"))
+
+If you want to store an answer from a page, you can use the page's ``save_answer`` parameter:
 
 .. code-block:: python
 
@@ -133,9 +135,18 @@ The other, simpler route is to use the page's ``save_answer`` parameter:
             time_estimate=10,
             save_answer="favorite_color",
         ),
+        PageMaker(
+            lambda participant: InfoPage(
+                f"Your favorite color is {participant.var.favorite_color}"
+            ),
+            time_estimate=5,
+        ),
     )
 
-If you want to define a dynamic variable that is shared across the entire experient,
+Experiment state
+^^^^^^^^^^^^^^^^
+
+If you want to define a dynamic variable that is shared across the entire experiment,
 you can use ``experiment.var``:
 
 .. code-block:: python
@@ -143,7 +154,6 @@ you can use ``experiment.var``:
     from psynet.timeline import CodeBlock
 
     CodeBlock(lambda experiment: experiment.var.set("random_number", random.randint(1, 10)))
-
 
 
 Code execution
@@ -513,7 +523,7 @@ As naive as this test may be, it does catch a lot of basic implementation errors
 and it can do so much faster than running ``psynet debug local`` and manually clicking through the experiment.
 Note however that it only tests the back-end logic, not the front-end.
 
-**Exercise**: run ``psynet test local` on the timeline demo (``demos/features/02-timeline``).
+**Exercise**: run ``psynet test local`` on the timeline demo (``demos/features/02-timeline``).
 
 Using the debugger
 ^^^^^^^^^^^^^^^^^^
@@ -554,7 +564,8 @@ code in the debug console. This is a great way to improve your understanding of 
 
     If you aren't using VSCode or Cursor you can use a different debugger instead.
     Unfortunately standard IDE debuggers don't work out of the box because of the way that PsyNet uses subprocesses.
-    However, PyCharm's Python debug server works well, as does ``rpdb`` (which is platform agnostic).
+    However, PyCharm's Python debug server works well, as does
+    `rpdb <https://pypi.org/project/rpdb/>`_ (which is platform agnostic).
 
 
 Making a shopping game
@@ -563,10 +574,12 @@ Making a shopping game
 In this exercise your task is to design your own timeline that takes advantage of various control features in PsyNet. Here's
 the proposal: make a timeline that simulates the experience of going to the shop and buying some items. In particular,
 imagine you're a shop assistant asking the customer what they want. You give them a choice of items, you ask the
-customer how many items they want, and add these items to their virtual basket. You then loop round, asking them if they
-want to choose any more items, and so on. These items should all accumulate in the basket. Once the participant says
+customer how many items they want, and add these items to their virtual basket.
+You then loop round, asking them if they want to choose any more items, and so on.
+These items should all accumulate in the basket. Once the participant says
 they're done, tell them how much they need to pay.
 
 .. hint::
 
-    Start with the timeline demo (``demos/features/02-timeline``) and modify it to implement your app.
+    We suggest you start with the timeline demo (``demos/features/02-timeline``) and modify it to
+    implement your app.

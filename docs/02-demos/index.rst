@@ -6,7 +6,6 @@ Pipelines
 
 .. toctree::
    :maxdepth: 1
-   :numbered:
 
    pipelines/01-simple-rating
    pipelines/02-tapping
@@ -19,7 +18,6 @@ Features
 
 .. toctree::
    :maxdepth: 1
-   :numbered:
 
    features/01-pages
    features/02-timeline

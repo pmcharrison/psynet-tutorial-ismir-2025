@@ -213,10 +213,11 @@ There are four compulsory parameters for instantiating a static trial maker:
 
 .. warning::
 
-    If ``get_nodes`` relies on listing audio files, make sure you write ``nodes=get_nodes`` rather than ``nodes=get_nodes()``.
-The latter would fail when the app is deployed, 
-because the app would try to list files that are automatically excluded from the source code package.
-If you provide ``get_nodes`` unevaluated, then PsyNet will only evaluate it on the local machine when the app is being deployed.
+    If ``get_nodes`` relies on listing audio files, make sure you write ``nodes=get_nodes``
+    rather than ``nodes=get_nodes()``.
+    The latter would fail when the app is deployed,
+    because the app would try to list files that are automatically excluded from the source code package.
+    If you provide ``get_nodes`` unevaluated, then PsyNet will only evaluate it on the local machine when the app is being deployed.
 
 There are many other optional parameters available too. See in particular:
 
@@ -293,7 +294,7 @@ Function assets are created by passing a function to ``asset``:
 
     a = asset(generate_stimulus)
 
-This function should accept a ``path`` argument corresponding to the path 
+This function should accept a ``path`` argument corresponding to the path
 of the file to generate.
 It can also request arguments that are keys in the node or trial's definition;
 we will see an example below.
@@ -308,10 +309,11 @@ Placing assets in nodes
 
 As discussed above, we typically define our nodes in a ``get_nodes`` function
 and pass this function to a trial maker.
-We can include assets in these nodes and PsyNet will upload these assets 
+We can include assets in these nodes and PsyNet will upload these assets
 during experiment deployment.
 
-If using a function asset in this context, you can include keys from the node definition in the function signature and these parts of the definition will be passed to the function.
+If using a function asset in this context, you can include keys from the node definition
+in the function signature and these parts of the definition will be passed to the function.
 In the following example, we use this technique to populate the ``f0`` argument:
 
 .. code-block:: python
@@ -368,7 +370,7 @@ We can then access this asset within ``show_trial``:
     class CustomTrial(StaticTrial):
         def show_trial(self, experiment, participant):
             reference = self.trial_maker.assets["reference_audio"]
-            
+
 Other situations
 ^^^^^^^^^^^^^^^^
 
@@ -401,7 +403,7 @@ from the default 'local storage' configuration).
 Interim conclusion
 ------------------
 
-We have now reviewed the key classes used to implement static experiments in PsyNet: 
+We have now reviewed the key classes used to implement static experiments in PsyNet:
 nodes, trials, trial makers, and assets.
 With these tools you can already implement a great range of paradigms.
 However, there are some further techniques you might find useful for achieving more flexibility;
@@ -411,7 +413,7 @@ Advanced usage
 --------------
 
 Trial-specific definitions
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default trials inherit their definitions verbatim from their parent nodes.
 However, sometimes it's desirable to introduce some surface variation at the trial level:
@@ -453,7 +455,7 @@ See the following example:
             original_audio_asset = self.node.assets["stimulus"]
             assert isinstance(original_audio_asset.storage, LocalStorage), \
                 "generate_stimulus currently only supports LocalStorage"
-            
+
             original_audio_path = original_audio_asset.var.file_system_path
             sample_rate, audio = wavfile.read(original_audio_path)
             apply_pan(audio, pan)
@@ -464,7 +466,7 @@ Note how we access the parent node's assets using ``self.node.assets``,
 read the relevant asset file using ``wavfile.read``, and write our own new asset file using ``wavfile.write``.
 
 Blocks
-^^^^^^
+~~~~~~
 
 The default behavior of a ``StaticTrialMaker`` is to administer a sequence of trials to the participant
 where each successive trial is generated from a different node. By default, the nodes are chosen such that trials
@@ -550,7 +552,7 @@ You would use logic like this:
 
 
 Participant groups
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 In an analogous fashion, it is possible to associate each node with a participant group.
 
@@ -587,7 +589,7 @@ something like this:
 The function should return a string corresponding to the group chosen for that participant.
 
 Scoring responses
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 Often it makes sense to assign scores to individual trials. This can be done by overriding
 the ``score_answer`` method of the trial class.
@@ -600,7 +602,7 @@ For example:
             return int(answer == definition["correct_answer"])
 
 Feedback
-^^^^^^^^
+~~~~~~~~
 
 It is also possible to provide feedback to the participant after each trial.
 This can be done by overriding the ``show_feedback`` method of the trial class.
@@ -618,7 +620,7 @@ For example:
             return InfoPage(text)
 
 Performance checks
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 As noted above, it is possible to implement automated performance checks for trial makers.
 A performance check assesses the trials that the participant has completed,
@@ -661,7 +663,7 @@ In order to enable the performance check, we need to set either ``check_performa
 after the participant has completed the trial maker.
 
 Recordings
-^^^^^^^^^^
+~~~~~~~~~~
 
 If you want to make media recordings during a trial, you can make ``show_trial`` return
 a page containing an ``AudioRecordControl`` or ``VideoRecordControl``.
