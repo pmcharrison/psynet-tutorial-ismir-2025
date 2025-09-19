@@ -48,9 +48,9 @@ Nodes
 Nodes specify the stimuli that will be presented to the participant.
 Each node contains two key attributes:
 
-- `definition` -
+- ``definition`` -
   A dictionary of information about the stimulus, e.g. ``{"instrument": "clarinet"}``.
-- `assets` -
+- ``assets`` -
   An optional dictionary of assets (i.e. media files).
 
 In a static experiment, the nodes are typically specified by defining a ``get_nodes`` function
@@ -215,7 +215,7 @@ There are four compulsory parameters for instantiating a static trial maker:
 
     If ``get_nodes`` relies on listing audio files, make sure you write ``nodes=get_nodes`` rather than ``nodes=get_nodes()``.
 The latter would fail when the app is deployed, 
-because the app would try to list files that are automatically excluded from the source code packsge.
+because the app would try to list files that are automatically excluded from the source code package.
 If you provide ``get_nodes`` unevaluated, then PsyNet will only evaluate it on the local machine when the app is being deployed.
 
 There are many other optional parameters available too. See in particular:
@@ -387,7 +387,7 @@ For example, here's how we could create an asset in a code block:
         participant.assets["stimulus_x"] = a
         a.deposit()
 
-    def make_stimulus(x)
+    def make_stimulus(x):
         ...
 
     CodeBlock(make_stimulus)
@@ -430,7 +430,7 @@ For example:
             return definition
 
 This might mean we need to generate a new asset for that specific trial.
-As before, we create this asset with the ``asset`` function, and then add it to the trial using the ``add_asset`` method.
+As before, we create this asset with the ``asset`` function, and then add it to the trial using the ``add_assets`` method.
 See the following example:
 
 .. code-block:: python
@@ -449,12 +449,11 @@ See the following example:
             })
             return definition
 
-        def generate_stimulus(self, path, pan, volume)
+        def generate_stimulus(self, path, pan, volume):
             original_audio_asset = self.node.assets["stimulus"]
-            assert (
-                isinstance(original_audio_asset.storage, LocalStorage),
+            assert isinstance(original_audio_asset.storage, LocalStorage), \
                 "generate_stimulus currently only supports LocalStorage"
-            )
+            
             original_audio_path = original_audio_asset.var.file_system_path
             sample_rate, audio = wavfile.read(original_audio_path)
             apply_pan(audio, pan)
