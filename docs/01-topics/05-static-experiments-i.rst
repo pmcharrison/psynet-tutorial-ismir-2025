@@ -359,6 +359,7 @@ but instead we should pass them to the trial maker. Here's an example:
         assets={
             "reference_audio": asset("reference.mp3")
         }
+    )
 
 We can then access this asset within ``show_trial``:
 
@@ -366,7 +367,7 @@ We can then access this asset within ``show_trial``:
 
     class CustomTrial(StaticTrial):
         def show_trial(self, experiment, participant):
-            reference = self.trial_maker.assets["reference"]
+            reference = self.trial_maker.assets["reference_audio"]
             
 Other situations
 ^^^^^^^^^^^^^^^^
