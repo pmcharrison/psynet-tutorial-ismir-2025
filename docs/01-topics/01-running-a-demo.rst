@@ -131,7 +131,7 @@ Shutting down the Codespace
 ---------------------------
 
 If you are using GitHub Codespaces, you can shut down the Codespace by clicking the blue Codespaces button in the bottom left,
-then clicking "Stop Current Codespace". However, if you are continuing with the next topic,
+then clicking "Stop Current Codespace". However, if you are continuing with the next chapter,
 we recommend keeping the Codespace running, so that you don't have to wait for it to start up again.
 If you want to reset your environment to its original state, you can enter ``git reset --hard`` into your terminal
 (or, to be completely sure, you can delete the Codespace and create a new one).

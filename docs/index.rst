@@ -21,18 +21,14 @@ We're also keen to get your feedback on the software.
 We hope you might be able to complete a short survey once the session is over.
 
 We hope you enjoy the tutorial!
-
-.. note::
-    This tutorial assumes you are familiar with Python and have a basic familiarity with the command line.
-    If you are new to Python, we recommend you take a look at the `Python's Getting Started page <https://www.python.org/about/gettingstarted/>`_.
-    If you are new to the command line, we recommend you take a look at the `Software Carpentry's Command Line tutorial <https://swcarpentry.github.io/shell-novice/>`_.
-
+To get started, click 'Next'.
 
 .. toctree::
    :hidden:
    :maxdepth: 1
 
    toc
+   01-topics/00-prerequisites
    01-topics/01-running-a-demo
    01-topics/02-pipelines
    01-topics/03-pages

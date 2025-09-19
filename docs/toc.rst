@@ -1,9 +1,10 @@
 Table of contents
 =================
 
-Topics
-------
+Chapters
+--------
 
+- :doc:`01-topics/00-prerequisites`
 - :doc:`01-topics/01-running-a-demo`
 - :doc:`01-topics/02-pipelines`
 - :doc:`01-topics/03-pages`

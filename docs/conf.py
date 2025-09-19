@@ -12,12 +12,15 @@ html_theme_options = {
     "show_toc_level": 2,
     "secondary_sidebar_items": ["page-toc", "edit-this-page"],
     "icon_links": [
-    {
-        "name": "GitHub",
-        "url": "https://github.com/pmcharrison/psynet-tutorial-ismir-2025",
-        "icon": "fa-brands fa-github",
-    },
-    ]
+        {
+            "name": "GitHub",
+            "url": "https://github.com/pmcharrison/psynet-tutorial-ismir-2025",
+            "icon": "fa-brands fa-github",
+        },
+    ],
+    "footer_start": [],
+    "footer_center": [],
+    "footer_end": []
 }
 
 html_context = {
@@ -25,5 +28,9 @@ html_context = {
     "github_repo": "psynet-tutorial-ismir-2025",
     "github_version": "main",
     "doc_path": "docs",
+}
+
+html_sidebars = {
+    "**": []
 }
 

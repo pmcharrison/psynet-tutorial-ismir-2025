@@ -239,7 +239,7 @@ Further reading
 
 .. note::
 
-    In a live tutorial we recommend skipping this section for now and moving onto the next topic.
+    In a live tutorial we recommend skipping this section for now and moving onto the next chapter.
     However, we recommend coming back to this section before you run a real PsyNet experiment.
 
 Consent pages

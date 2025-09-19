@@ -46,7 +46,7 @@ Pages
 
 Pages define the web page that is shown to the participant at a given
 point in time, and have fixed content that is the same for all participants.
-We covered them in detail in the previous topic, :doc:`03-pages`.
+We covered them in detail in the previous chapter, :doc:`03-pages`.
 
 Page makers
 ~~~~~~~~~~~
@@ -234,7 +234,7 @@ By default, participant proceed through timelines in serial order.
 However, PsyNet provides various control constructs that enable more complex ordering logic.
 
 Conditional
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 The conditional construct decides what timeline logic to administer based on a boolean expression.
 For example:
@@ -261,7 +261,7 @@ For example:
     )
 
 Switch
-^^^^^^
+~~~~~~
 
 The switch is a more advanced version of the conditional that is useful for choosing between more than two options:
 
@@ -289,7 +289,7 @@ The switch is a more advanced version of the conditional that is useful for choo
     )
 
 While loop
-^^^^^^^^^^
+~~~~~~~~~~
 
 While loops repeatedly administer some logic while a given test condition is satisfied.
 In the following example, the while loop continues until ``randint`` returns a value greater than 5:
@@ -315,7 +315,7 @@ Note that we have to tell ``while_loop`` how many repetitions we expect on avera
 time to estimate for that part of the timeline.
 
 For loop
-^^^^^^^^
+~~~~~~~~
 
 For loops iterate over a list whose values are determined once the participant reaches that part in the timeline.
 For example:
@@ -346,7 +346,7 @@ Note that, similar to ``while_loop``, we need to specify the number of expected 
 how long this part of the timeline will take.
 
 Module
-------
+~~~~~~
 
 Modules are a tool for organizing timeline logic into discrete units.
 In addition to promoting better code organization, modules provide
@@ -419,7 +419,7 @@ Note that the module's assets can then be accessed by the ``PageMaker``'s lambda
 
 
 Time estimates
---------------
+~~~~~~~~~~~~~~
 
 It is considered good practice to pay online participants a fee that corresponds
 approximately to a reasonable hourly wage, for example 10 GBP/hour.
@@ -439,7 +439,7 @@ final payment.
 
 
 Combining elements
-------------------
+~~~~~~~~~~~~~~~~~~
 
 We normally define our timelines by defining a ``get_timeline`` function in ``experiment.py``
 and then saving the output of this function in our ``Experiment`` class.
@@ -500,7 +500,7 @@ out of multiple intermediate objects. For example, you can write something like 
 Note the use of the ``join`` function to create and merge sequences of timeline elements.
 
 Exercises
----------
+~~~~~~~~~
 
 Using automated testing
 ^^^^^^^^^^^^^^^^^^^^^^^
