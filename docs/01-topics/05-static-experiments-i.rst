@@ -366,9 +366,7 @@ Other situations
 
 It is also possible to create assets in scenarios that don't fall into any of the above
 (e.g. in code blocks).
-In this case one must take responsibility for providing appropriate metadata for the asset
-(e.g. specifying what participant it belongs to, specifying what key should be used to refer to the asset)
-and for triggering its deposit.
+In this case one must take responsibility for triggering the asset's deposit.
 For example, here's how we could create an asset in a code block:
 
 .. code-block:: python
@@ -377,27 +375,14 @@ For example, here's how we could create an asset in a code block:
         a = asset(
             make_stimulus,
             arguments={"x": participant.var.x},
-            participant=participant,
-            local_key="stimulus_x"
         )
-        asset.deposit()
+        participant.assets["stimulus_x"] = a
+        a.deposit()
 
     def make_stimulus(x)
         ...
 
     CodeBlock(make_stimulus)
-
-Then one could subsequently access this asset as follows:
-
-.. code-block:: python
-
-    participant.assets["stimulus_x"]
-
-.. note::
-
-    In ``participant.assets``, ``node.assets``, and ``trial.assets``,
-    the dictionary keys come from ``asset.local_key``.
-    In ``module.assets`` and ``trial_maker.assets``, the keys come from ``asset.key_within_module``.
 
 You can see what assets have been defined for your experiment by visiting the
 Asset tabs in the dashboard's Database section.
