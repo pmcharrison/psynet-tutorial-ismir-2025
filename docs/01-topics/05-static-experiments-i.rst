@@ -197,7 +197,7 @@ We instantiate the trial maker directly within the timeline:
             ),
         )
 
-There are three compulsory parameters for instantiating a static trial maker:
+There are four compulsory parameters for instantiating a static trial maker:
 
 - ``id_`` -
   A string providing a unique identifier for the trial maker.
@@ -209,7 +209,14 @@ There are three compulsory parameters for instantiating a static trial maker:
   the number of trials we expect the average participant to take
   (used for time estimation),
   specified either as an integer or the string
-  ``"n_nodes"`` (shorthand for the number of nodes in the trial maker). 
+  ``"n_nodes"`` (shorthand for the number of nodes in the trial maker).
+
+.. warning::
+
+    If ``get_nodes`` relies on listing audio files, make sure you write ``nodes=get_nodes`` rather than ``nodes=get_nodes()``.
+The latter would fail when the app is deployed, 
+because the app would try to list files that are automatically excluded from the source code packsge.
+If you provide ``get_nodes`` unevaluated, then PsyNet will only evaluate it on the local machine when the app is being deployed.
 
 There are many other optional parameters available too. See in particular:
 
@@ -390,12 +397,28 @@ You can also see how these files are being organized by inspecting the contents 
 which is the default location for asset storage (assuming that you haven't switched away
 from the default 'local storage' configuration).
 
+Interim conclusion
+------------------
+
+We have now reviewed the key classes used to implement static experiments in PsyNet: 
+nodes, trials, trial makers, and assets.
+With these tools you can already implement a great range of paradigms.
+However, there are some further techniques you might find useful for achieving more flexibility;
+these are described below.
+
 Advanced usage
 --------------
 
-To vary the definition on the trial level, we override the ``finalize_definition`` method of our custom Trial class.
-For example, if we wanted to vary the volume and the pan slightly from trial to trial,
-we might write something like this:
+Trial-specific definitions
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default trials inherit their definitions verbatim from their parent nodes.
+However, sometimes it's desirable to introduce some surface variation at the trial level:
+for example, we might want each node to represent a different audio file,
+but want each trial to involve random volume and pan parameters, so as to increase variety for the participants.
+This is achieved using the trial's ``finalize_definition`` method.
+This method receives the initial definition from the node; the experimenter can then alter or add to this information to produce the trial's definition.
+For example:
 
 .. code-block:: python
 
@@ -405,10 +428,9 @@ we might write something like this:
             definition["volume"] = random.uniform(0.75, 1.25)
             return definition
 
-If we want to add assets that are specific to the trial (not just inherited from the node),
-we should call ``add.assets`` within ``finalize_definition``.
-Because these assets are being generated on the fly, we probably want to construct the asset from a function
-rather than (just) a file path. So, we might extend the former example as follows:
+This might mean we need to generate a new asset for that specific trial.
+As before, we create this asset with the ``asset`` function, and then add it to the trial using the ``add_asset`` method.
+See the following example:
 
 .. code-block:: python
 
@@ -438,15 +460,11 @@ rather than (just) a file path. So, we might extend the former example as follow
             apply_volume(audio, volume)
             wavfile.write(path, sample_rate, audio)
 
-Here we've defined a helper method called ``generate_stimulus`` that generates the trial's modified stimulus.
-Under the hood, the asset system will call this method when the asset is needed,
-providing as arguments the path for the desired output file as well as the contents from the trial's definition.
-We use ``self.node.assets`` to access the parent node's assets,
-and then use ``wavfile.read`` to read the original audio file.
-We then apply the pan and volume adjustments to the audio, and write the result to the desired output file.
+Note how we access the parent node's assets using ``self.node.assets``,
+read the relevant asset file using ``wavfile.read``, and write our own new asset file using ``wavfile.write``.
 
 Blocks
-------
+^^^^^^
 
 The default behavior of a ``StaticTrialMaker`` is to administer a sequence of trials to the participant
 where each successive trial is generated from a different node. By default, the nodes are chosen such that trials
@@ -532,7 +550,7 @@ You would use logic like this:
 
 
 Participant groups
-------------------
+^^^^^^^^^^^^^^^^^^
 
 In an analogous fashion, it is possible to associate each node with a participant group.
 
@@ -568,23 +586,8 @@ something like this:
 
 The function should return a string corresponding to the group chosen for that participant.
 
-
-
-Note how we have provided the trial maker with both the list of nodes and the customized trial class.
-
-.. note::
-
-    An important thing to note at this point is that the list of nodes is provided as a callable,
-    not as a list. The reason why is a bit subtle. Our ``get_nodes`` function relies on listing the files in a directory,
-    specifically a directory located within the ``data`` directory. Files within this directory are not included
-    in the source code package that is deployed to the experiment server.
-    This is intentional, because we want to keep the source code package light.
-    That means that the file listing code will throw a ``FileNotFoundError`` if we run it on the experiment server.
-    To get around this, we wrap it in a callable, meaning that it is only executed when required
-    (i.e. in the pre-deploy phase, when uploading the experiment to the server).
-
 Scoring responses
------------------
+^^^^^^^^^^^^^^^^^
 
 Often it makes sense to assign scores to individual trials. This can be done by overriding
 the ``score_answer`` method of the trial class.
@@ -597,7 +600,7 @@ For example:
             return int(answer == definition["correct_answer"])
 
 Feedback
---------
+^^^^^^^^
 
 It is also possible to provide feedback to the participant after each trial.
 This can be done by overriding the ``show_feedback`` method of the trial class.
@@ -615,7 +618,7 @@ For example:
             return InfoPage(text)
 
 Performance checks
-------------------
+^^^^^^^^^^^^^^^^^^
 
 As noted above, it is possible to implement automated performance checks for trial makers.
 A performance check assesses the trials that the participant has completed,
@@ -658,7 +661,7 @@ In order to enable the performance check, we need to set either ``check_performa
 after the participant has completed the trial maker.
 
 Recordings
-----------
+^^^^^^^^^^
 
 If you want to make media recordings during a trial, you can make ``show_trial`` return
 a page containing an ``AudioRecordControl`` or ``VideoRecordControl``.
