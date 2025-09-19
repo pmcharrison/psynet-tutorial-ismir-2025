@@ -350,10 +350,55 @@ but instead we should pass them to the trial maker. Here's an example:
 
     trial_maker = StaticTrialMaker(
         assets={
+            "reference_audio": asset("reference.mp3")
+        }
+
+We can then access this asset within ``show_trial``:
+
+.. code-block:: python
+
+    class CustomTrial(StaticTrial):
+        def show_trial(self, experiment, participant):
+            reference = self.trial_maker.assets["reference"]
             
+Other approaches
+^^^^^^^^^^^^^^^^
+
+It is also possible to create assets in scenarios that don't fall into any of the above
+(e.g. in code blocks).
+In this case one must take responsibility for providing appropriate metadata for the asset
+(e.g. specifying what participant it belongs to, specifying what key should be used to refer to the asset)
+and for triggering its deposit.
+For example, here's how we could create an asset in a code block:
+
+.. code-block:: python
+
+    def make_asset(participant):
+        a = asset(
+            make_stimulus,
+            arguments={"x": participant.var.x},
+            participant=participant,
+            local_key="stimulus_x"
+        )
+        asset.deposit()
+
+    def make_stimulus(x)
+        ...
+
+    CodeBlock(make_stimulus)
+
+Then one could subsequently access this asset using the following SQLAlchemy code:
+
+.. code-block:: python
+
+    from psynet.asset import Asset
+
+    Asset.query.filter_by(
+        local_key="stimulus_x",
+        participant_id=participant.id
+    ).one()
 
 todo
-
 
 Just creating an asset object like this doesn't actually do anything;
 the asset needs to be deposited first.
