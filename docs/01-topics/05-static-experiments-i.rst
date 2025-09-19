@@ -361,7 +361,7 @@ We can then access this asset within ``show_trial``:
         def show_trial(self, experiment, participant):
             reference = self.trial_maker.assets["reference"]
             
-Other approaches
+Other situations
 ^^^^^^^^^^^^^^^^
 
 It is also possible to create assets in scenarios that don't fall into any of the above
@@ -387,43 +387,26 @@ For example, here's how we could create an asset in a code block:
 
     CodeBlock(make_stimulus)
 
-Then one could subsequently access this asset using the following SQLAlchemy code:
+Then one could subsequently access this asset as follows:
 
 .. code-block:: python
 
-    from psynet.asset import Asset
+    participant.assets["stimulus_x"]
 
-    Asset.query.filter_by(
-        local_key="stimulus_x",
-        participant_id=participant.id
-    ).one()
+.. note::
 
-todo
-
-Just creating an asset object like this doesn't actually do anything;
-the asset needs to be deposited first.
-Depositing can be done manually by calling ``a.deposit()``.
-However, in most situations one shouldn't need to do this manually.
-If pre-defining assets as part of the timeline initialization, then it is sufficient to pass the
-asset objects to the ``assets`` parameter of nodes, trial makers, or modules.
-If defining assets on the fly as part of a trial, then one would typically call
-``trial.add_assets`` instead.
-
-In the context of ``show_trial``, assets can be accessed via the ``self.assets`` attribute of the trial.
-These assets can then be passed directly to modular page prompts such as
-``AudioPrompt`` or ``VideoPrompt``.
-Alternatively, one can extract the public URL from ``asset.url``, and use this directly.
+    In ``participant.assets``, ``node.assets``, and ``trial.assets``,
+    the dictionary keys come from ``asset.local_key``.
+    In ``module.assets`` and ``trial_maker.assets``, the keys come from ``asset.key_within_module``.
 
 You can see what assets have been defined for your experiment by visiting the
 Asset tabs in the dashboard's Database section.
 You can also see how these files are being organized by inspecting the contents of ``~/psynet-data/assets``,
-which is the default location for asset storage assuming that you haven't switched away
-from the default 'local storage' configuration.
+which is the default location for asset storage (assuming that you haven't switched away
+from the default 'local storage' configuration).
 
 Advanced usage
 --------------
-
-
 
 To vary the definition on the trial level, we override the ``finalize_definition`` method of our custom Trial class.
 For example, if we wanted to vary the volume and the pan slightly from trial to trial,
