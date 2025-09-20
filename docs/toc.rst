@@ -1,15 +1,17 @@
-Table of contents
-=================
+Overview
+========
 
-Chapters
---------
+This tutorial comprises a series of chapters, intended to be read in order.
+Don't worry if you don't make it through all of them in the tutorial itself,
+you can always continue another time!
 
-- :doc:`01-topics/00-prerequisites`
 - :doc:`01-topics/01-running-a-demo`
 - :doc:`01-topics/02-pipelines`
 - :doc:`01-topics/03-pages`
 - :doc:`01-topics/04-timeline`
 - :doc:`01-topics/05-static-experiments-i`
+- :doc:`01-topics/06-chain-experiments`
+- :doc:`01-topics/07-where-next`
 
 Other resources
 ---------------

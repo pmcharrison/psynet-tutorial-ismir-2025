@@ -33,4 +33,3 @@ html_context = {
 html_sidebars = {
     "**": []
 }
-

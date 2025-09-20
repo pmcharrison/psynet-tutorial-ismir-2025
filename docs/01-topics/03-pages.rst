@@ -1,10 +1,6 @@
 Pages
 =====
 
-The :doc:`02-pipelines` exercise introduced PsyNet experiments at a very high level.
-We're now going to zoom in and start looking the individual building blocks that make up these experiments,
-starting with pages.
-
 PsyNet uses ``Page`` objects to represent what the participant sees at a given point in the experiment.
 These ``Page`` objects are Python objects, all inheriting from the same ``Page`` base class.
 Under the hood, the crucial method is ``Page.render``, which returns the HTML for the participant's current page.
@@ -236,11 +232,6 @@ Exercises
 
 Further reading
 ---------------
-
-.. note::
-
-    In a live tutorial we recommend skipping this section for now and moving onto the next chapter.
-    However, we recommend coming back to this section before you run a real PsyNet experiment.
 
 Consent pages
 ^^^^^^^^^^^^^

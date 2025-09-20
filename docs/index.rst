@@ -27,12 +27,14 @@ To get started, click 'Next'.
    :hidden:
    :maxdepth: 1
 
-   toc
    01-topics/00-prerequisites
+   toc
    01-topics/01-running-a-demo
    01-topics/02-pipelines
    01-topics/03-pages
    01-topics/04-timeline
    01-topics/05-static-experiments-i
+   01-topics/06-chain-experiments
+   01-topics/07-where-next
    02-demos/index
 

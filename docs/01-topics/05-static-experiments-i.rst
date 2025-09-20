@@ -1,12 +1,6 @@
 Static experiments
 ==================
 
-Prerequisites
--------------
-
-This chapter assumes you have read the preceding chapters (particularly :doc:`03-pages`);
-it also assumes you are familiar with Python subclassing and list comprehensions.
-
 Introduction
 ------------
 
@@ -400,6 +394,15 @@ You can also see how these files are being organized by inspecting the contents 
 which is the default location for asset storage (assuming that you haven't switched away
 from the default 'local storage' configuration).
 
+Alternatives to the asset system
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases (e.g. very large collections of stimuli) you might want to bypass the asset system altogether
+and implement your own file management system.
+There are two main alternatives:
+1. Place the files in the ``static`` directory and access them like ``/static/filename.mp3``.
+2. Upload the files to an external storage system and code the URLs directly into the experiment.
+
 Interim conclusion
 ------------------
 
@@ -662,6 +665,34 @@ In order to enable the performance check, we need to set either ``check_performa
 ``check_performance_every_trial=True``. Here we've done the former, which means that the performance check will be run once,
 after the participant has completed the trial maker.
 
+You can also customize what the participant sees after the performance check.
+For this you will need to override a few methods in the trial maker.
+Here's an example:
+
+.. code-block:: python
+
+    class CustomTrialMaker(StaticTrialMaker):
+        def check_fail_logic(self):
+            return join(
+                PageMaker(lambda participant: InfoPage(
+                    f"""
+                    You scored {participant.module_state.performance_check["score"]} on the performance check.
+                    Unfortunately this is not enough to continue to the next stage.
+                    """
+                )),
+                UnsuccessfulEndPage(failure_tags=["performance_check"])
+            )
+
+        give_end_feedback_passed = True
+
+        def get_end_feedback_passed_page(self, score):
+            return InfoPage(
+                f"""
+                You scored {score} on the performance check.
+                Congratulations! You can continue to the next stage.
+                """
+            )
+
 Recordings
 ~~~~~~~~~~
 
@@ -697,3 +728,81 @@ However, it can be useful to enforce waiting if your experiment logic depends on
 - If you want to wait for all trial analyses to complete before running the
   trial maker's 'end' performance check,
   set ``end_performance_check_waits = True`` in your custom trial maker definition.
+
+Exercises
+---------
+
+Make a copy of the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` demo,
+and implement the following changes:
+
+1. The original task involves rating the audio stimulus on two scales.
+   Instead, change the task to instrument identification,
+   where the participant has to select the correct instrument from a dropdown menu.
+
+.. hint::
+
+    You will have to think about how to construct a list of valid instruments.
+    One approach is to hard-code the list of instruments in ``experiment.py``.
+    Another approach would be to compile these instruments from the file names
+    that you compile in ``get_nodes``. However, you need to be careful about the
+    file listing approach, as the experiment server doesn't have direct access to the
+    files in the ``data`` directory.
+    An alternative is to use SQLAlchemy to get this information from the database,
+    something like this:
+
+    .. code-block:: python
+
+        nodes = StaticNode.query.filter_by(trial_maker_id="instruments").all()
+        instruments = sorted(set([node.definition["instrument"] for node in nodes]))
+
+    This code would probably go in the ``show_trial`` method of the custom trial class.
+
+2. Implement a ``score_answer`` method that assigns a score to the participant's response.
+
+3. Implement a ``show_feedback`` method that shows a feedback page to the participant.
+
+4. Update ``show_feedback`` so that it compares the participant's score to other
+   participants' scores.
+
+.. hint::
+
+    To get other participants' scores, you could make use of the following:
+
+    .. code-block:: python
+
+        trial.node  # get the trial's node
+        node.all_trials  # get all trials for the node
+
+.. hint::
+
+    You can use arbitrary HTML formatting to make your page look nice,
+    just make sure to wrap your HTML in a ``markupsafe.Markup`` object.
+
+5. Add a performance check at the end of the trial maker,
+   where participants fail if they score less than 50%.
+
+6. Use ``psynet simulate`` to run automated bots through your experiment.
+   Explore the exported dataset at ``data/simulated_data``.
+   Can you find the csv file containing your trial data?
+   Can you find all you'd need to do a proper analysis?
+
+.. hint::
+
+    You can customize the number of bots used by ``psynet simulate``
+    by setting ``test_n_bots = ...`` in your experiment class.
+
+7. So far we have been using a fixed audio file for all nodes.
+   Let's say we now want each trial to involve a random pitch shift of the node's audio.
+   See if you can implement this logic using ``finalize_definition`` and ``add_assets``.
+
+.. hint::
+
+    We recommend using the ``librosa.effects.pitch_shift`` function for this.
+    You might need to ``pip install librosa`` to make it available.
+
+.. hint::
+
+    This exercise might need some debugging before you get it right.
+    Use ``psynet test local`` with ``test_n_bots = 1``
+    to run a single bot through the experiment and check for logic errors.
+    Use ``psynet.debugger()`` if you want an interactive breakpoint within ``finalize_definition``.

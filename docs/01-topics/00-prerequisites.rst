@@ -1,9 +1,13 @@
 Prerequisites
 =============
 
-This tutorial assumes you are familiar with Python and have a basic familiarity with the command line.
+This tutorial assumes some familiarity with Python.
+In particular, you should be familiar with Python's class system, inheritance,
+and list comprehensions.
 If you are new to Python, we recommend you take a look at the
 `Python's Getting Started page <https://www.python.org/about/gettingstarted/>`_.
+
+You should also be familiar with the command line.
 If you are new to the command line, we recommend you take a look at the
 `Software Carpentry's Command Line tutorial <https://swcarpentry.github.io/shell-novice/>`_.
 

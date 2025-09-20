@@ -81,11 +81,3 @@ Tips
   By default it stores assets in a directory on the web server itself,
   though it is also possible to select an 'S3 storage' option, where assets are instead stored
   in an Amazon Web Services S3 bucket.
-
-.. note::
-
-  If you want full control over your audio files, you can bypass the asset management system altogether.
-  You could either:
-
-  (a) Place the files in the ``static/`` directory and access them like ``/static/filename.mp3``, or
-  (b) Upload the files to an external storage system and code the URLs directly into the experiment.
