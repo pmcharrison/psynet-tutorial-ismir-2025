@@ -56,7 +56,7 @@ The most important difference with chain nodes is that we need to implement a
 ``make_next_definition`` method. This method is called when it is time for the node to
 transition to its next state; it should return the definition for the new node.
 
-Typically ``make_next_definition`` will want to extract some information from the trials of the
+Typically ``make_next_definition`` will want to extract some information from the trial (or trials) of the
 existing node. We recommend accessing these trials using ``self.completed_and_processed_trials``,
 which returns a list of all trials for that node that have received answers and have finished processing
 (so that e.g. ``analyze_recording`` will have completed), excluding failed trials
@@ -107,6 +107,8 @@ Chain trials
 Chain trials are similar to static trials.
 As before, one must specify a ``time_estimate`` parameter and a ``show_trial`` method.
 See :doc:`05-static-experiments-i` for a reminder.
+
+
 
 Chain trial makers
 ------------------
