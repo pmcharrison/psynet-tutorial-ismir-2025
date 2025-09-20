@@ -186,11 +186,14 @@ Here is a simple implementation of an 'imitation-chain' paradigm implemented usi
             )
 
     ChainTrialMaker(
-        "stories",
+        id_="stories",
+        trial_class=CustomTrial,
+        node_class=CustomChainNode,
         chain_type="across",
-        get_start_nodes=get_start_nodes,  #  note: not get_start_nodes()!
+        start_nodes=get_start_nodes,
         expected_trials_per_participant="n_start_nodes",
         max_nodes_per_chain=10,
+        recruit_mode="n_trials",
     )
 
 Exercise
@@ -213,12 +216,16 @@ Hints
   To prevent this, create a custom subclass of ``TextControl`` with a custom ``validate`` function:
 
     .. code-block:: python
+        from psynet.timeline import FailedValidation
 
         class MelodyTextControl(TextControl):
             def validate(self, response, **kwargs):
+
                 answer = response.answer
                 if not self.is_valid_melody(answer):
-                    return "Invalid melody, please write your melody in the following format: ..."
+                    return FailedValidation(
+                        "Invalid melody, please write your melody in the following format: ..."
+                    )
                 return None
 
             def is_valid_melody(self, answer):
