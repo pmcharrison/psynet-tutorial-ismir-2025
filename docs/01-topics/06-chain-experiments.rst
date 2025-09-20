@@ -84,6 +84,23 @@ and also takes the mean answer from the node's trials:
     Note that, when calling ``make_next_definition``, ``self.degree`` will give the degree of the node that currently exists;
     the next node will have degree ``self.degree + 1``.
 
+Any node assets should be created by overriding the node class's ``async_on_deploy`` method and using ``add_assets``
+(which you might remember from :doc:`05-static-experiments-i`).
+
+.. code-block:: python
+
+    class CustomChainNode(ChainNode):
+        def async_on_deploy(self):
+            self.add_assets({
+                "stimulus_audio": asset(make_stimulus)
+            })
+
+.. note::
+
+    ``async_on_deploy`` is called asynchronously after the node is created;
+    participants won't be able to visit that node until this function has completed.
+
+
 Chain trials
 ------------
 
