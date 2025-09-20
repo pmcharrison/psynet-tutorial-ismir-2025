@@ -19,7 +19,9 @@ Software
 
 For trying the exercises in this tutorial, we recommend using **GitHub Codespaces**,
 a cloud-based development environment that is quick to set up and requires
-no local installation of software
-(except you will need **Google Chrome** in order to view the experiment as a participant).
+no local installation of software.
 All you need for this is a `GitHub account <https://github.com/>`_.
 We will show you how to set up a Codespace at the relevant point in the tutorial.
+
+Please also make sure you have **Google Chrome** installed,
+as we currently only support Chrome as a participant browser.
