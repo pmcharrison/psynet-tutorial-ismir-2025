@@ -8,7 +8,8 @@
 
 # We are pinning to some specific commits for PsyNet/Dallinger which
 # have unmerged changes.
-psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@caf93797de338c29151ecf89928d6ebcde8517ed#egg=psynet
+# See https://gitlab.com/PsyNetDev/PsyNet/-/merge_requests/889
+psynet@git+https://gitlab.com/PsyNetDev/PsyNet.git@c58737dbd5c396b59c0ea36a04df4dfae8fb3ae7#egg=psynet
 
 # Required for DT fix: https://github.com/Dallinger/Dallinger/pull/8107/commits
 dallinger==11.5.1
