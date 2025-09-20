@@ -8,7 +8,8 @@ and test the results.
 You have a couple of options for your programming environment.
 GitHub Codespaces provides a quick, cost-free way to get started,
 via a standardized online development environment.
-Of course, it is also possible to install PsyNet locally in a virtual environment,
+The primary disadvantage of Github Codespaces is that it is a little slow.
+It is alternatively possible to install PsyNet locally in a virtual environment,
 which will ultimately give you better performance and more control.
 However, in the in-person session, we'd prefer it if you took the GitHub Codespaces option
 to keep things simple.
@@ -71,6 +72,12 @@ Setting up your environment
             python -m venv venv
             source venv/bin/activate
             pip install -r requirements.txt -c constraints.txt
+
+        .. warning::
+
+            It's important that you ``pip install`` from ``requirements.txt`` and ``constraints.txt``,
+            rathr than ``pip install psynet``,
+            because this tutorial uses a development version of PsyNet, and may not work properly with other PsyNet versions.
 
         Install the Heroku CLI:
 

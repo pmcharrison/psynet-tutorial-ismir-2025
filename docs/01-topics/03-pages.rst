@@ -176,7 +176,8 @@ There are a few key features to point out in this example:
     For example, in the example above we leave a silent buffer of 0.5 seconds between the
     prompt finishing and the recording starting to avoid bleedover between the two.
 
-Various other prompts and controls are available in the PsyNet package:
+Various other prompts and controls are available in the PsyNet package
+(see `API documentation <https://psynetdev.gitlab.io/PsyNet/api/modular_page.html>`_ for more details):
 
 - ``VideoPrompt`` - Plays a video.
 - ``ColorPrompt`` - Displays a color.

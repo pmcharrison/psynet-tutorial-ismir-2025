@@ -706,15 +706,19 @@ See the following example:
             return definition
 
         def generate_stimulus(self, path, pan, volume):
+            import librosa
+            import soundfile as sf
+            from psynet.asset import LocalStorage
+
             original_audio_asset = self.node.assets["stimulus"]
             assert isinstance(original_audio_asset.storage, LocalStorage), \
                 "generate_stimulus currently only supports LocalStorage"
 
             original_audio_path = original_audio_asset.var.file_system_path
-            sample_rate, audio = wavfile.read(original_audio_path)
+            audio, sample_rate = librosa.load(original_audio_path, sr=None)
             apply_pan(audio, pan)
             apply_volume(audio, volume)
-            wavfile.write(path, sample_rate, audio)
+            sf.write(path, audio, sample_rate)
 
 Note how we access the parent node's assets using ``self.node.assets``,
 read the relevant asset file using ``wavfile.read``, and write our own new asset file using ``wavfile.write``.
@@ -739,7 +743,7 @@ then you should do the following:
     .. code-block:: python
 
         def analyze_recording(self, audio_file: str, output_plot: str):
-            fs, audio = wavfile.read(audio_file)
+            audio, sample_rate = librosa.load(original_audio_path, sr=None)
             analysis = ...
             make_plot(analysis, output_plot)
             return analysis

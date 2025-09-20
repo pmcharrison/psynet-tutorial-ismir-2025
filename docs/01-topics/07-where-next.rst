@@ -9,9 +9,10 @@ For information on these topics, please visit the `main PsyNet documentation web
 
 That documentation website also contains a range of other tutorials about different PsyNet topics.
 You could for example be interested in learning more about
-`graphics in PsyNet <https://psynetdev.gitlab.io/PsyNet/tutorials/graphics.html>`_
+`graphics in PsyNet <https://psynetdev.gitlab.io/PsyNet/tutorials/graphics.html>`_,
 or how to `synchronize multiple participants <https://psynetdev.gitlab.io/PsyNet/tutorials/synchronization.html>`_
-to produce multiplayer paradigms.
+to produce multiplayer paradigms,
+or how to support `multiple languages in PsyNet experiments <https://psynetdev.gitlab.io/PsyNet/tutorials/internationalization.html>`_.
 That documentation website is still work-in-progress, but we hope to polish it off soon.
 
 We welcome your questions and feedback. Please feel free to write to Peter Harrison (pmch2@cam.ac.uk)
