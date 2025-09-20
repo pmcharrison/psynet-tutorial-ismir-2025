@@ -185,9 +185,8 @@ This has implications for randomness. For example, if you write this:
     class Exp(psynet.experiment.Experiment):
         timeline = get_timeline()
 
-then ``get_timeline()`` will be called exactly once (when ``experiment.py`` is imported),
-and so ``random.randint`` will be called just once,
-and so multiple participants may see the same random number.
+then ``get_timeline()`` will be called exactly once (when ``experiment.py`` is imported).
+As a result, ``random.randint`` will be called just once, and multiple participants may see the same random number.
 To address this issue, you could write something like this:
 
 .. code-block:: python
@@ -230,7 +229,7 @@ data that is specific to a given participant should be set in code blocks and re
 Control logic
 -------------
 
-By default, participant proceed through timelines in serial order.
+By default, participants proceed through timelines in serial order.
 However, PsyNet provides various control constructs that enable more complex ordering logic.
 
 Conditional
@@ -247,7 +246,7 @@ For example:
     Timeline(
         ModularPage(
             "choose_page",
-            "What page do you want to see next?"
+            "What page do you want to see next?",
             PushButtonControl(choices=["page_1", "page_2"]),
             save_answer="choose_page",
         ),
@@ -273,7 +272,7 @@ The switch is a more advanced version of the conditional that is useful for choo
     Timeline(
         ModularPage(
             "choose_page",
-            "What page do you want to see next?"
+            "What page do you want to see next?",
             PushButtonControl(choices=["page_1", "page_2", "page_3"]),
             save_answer="choose_page",
         ),
@@ -298,7 +297,7 @@ In the following example, the while loop continues until ``randint`` returns a v
 
     while_loop(
         "my_loop",
-        lambda participant: participant.var.get("score", default=0) <= 5
+        lambda participant: participant.var.get("score", default=0) <= 5,
         logic=join(
             CodeBlock(lambda participant: participant.var.set("score", random.randint(1, 10))),
             conditional(
@@ -317,13 +316,13 @@ time to estimate for that part of the timeline.
 For loop
 ~~~~~~~~
 
-For loops iterate over a list whose values are determined once the participant reaches that part in the timeline.
+For loops iterate over a list whose values are determined when the participant reaches that part of the timeline.
 For example:
 
 .. code-block:: python
 
     from psynet.timeline import Timeline, for_loop
-    from psynet.modular_page, DropdownControl
+    from psynet.modular_page import DropdownControl
 
     Timeline(
         ModularPage(

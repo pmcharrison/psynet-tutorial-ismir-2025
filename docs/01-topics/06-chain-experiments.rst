@@ -43,7 +43,7 @@ Chain experiments use an analogous collection of base classes to static experime
   The trial maker determines the logic in which trials are presented to the participant.
 
 These classes share many aspects with their static counterparts,
-but there also some key differences.
+but there are also some key differences.
 
 Chain nodes
 -----------
@@ -157,7 +157,7 @@ Here is a simple implementation of an 'imitation-chain' paradigm implemented usi
             }
 
     def get_start_nodes():
-        return[
+        return [
             CustomChainNode(
                 definition={
                     "story": story,
@@ -188,7 +188,7 @@ Here is a simple implementation of an 'imitation-chain' paradigm implemented usi
     ChainTrialMaker(
         "stories",
         chain_type="across",
-        get_start_nodes=get_start_nodes,
+        get_start_nodes=get_start_nodes,  #  note: not get_start_nodes()!
         expected_trials_per_participant="n_start_nodes",
         max_nodes_per_chain=10,
     )
@@ -221,5 +221,5 @@ Hints
                     return "Invalid melody, please write your melody in the following format: ..."
                 return None
 
-            def is_valid_melody(answer):
+            def is_valid_melody(self, answer):
                 ...

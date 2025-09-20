@@ -5,7 +5,7 @@ Introduction
 ------------
 
 In PsyNet, we define a *static experiment* as an experiment where the stimuli stay fixed over time.
-Many experiments fit into this mould, including several of our demos:
+Many experiments fit into this mold, including several of our demos:
 
 - :doc:`01-simple-rating <../02-demos/pipelines/01-simple-rating>`: Participants rate audio stimuli for specified attributes;
 - :doc:`02-tapping <../02-demos/pipelines/02-tapping>`: Participants tap to the beat of musical stimuli;
@@ -61,7 +61,7 @@ In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` experiment,
                     "stimulus_name": path.stem
                 },
                 assets={
-                    "stimulus_audio": asset(path, cache=True),  # reuse the uploaded file between deployments
+                    "stimulus_audio": asset(path, cache=True)
                 },
             )
             for path in STIMULUS_DIR.glob(STIMULUS_PATTERN)
@@ -217,7 +217,7 @@ There are four compulsory parameters for instantiating a static trial maker:
     If ``get_nodes`` relies on listing audio files, make sure you write ``nodes=get_nodes``
     rather than ``nodes=get_nodes()``.
     The latter would fail when the app is deployed,
-    because the app would try to list files that are automatically excluded from the source code package.
+    because the app would try to list files that are excluded from the deployment package.
     Instead, you should defer evaluation by providing ``get_nodes`` as a function,
     which allows PsyNet to only evaluate it on the local machine while the deployment package is being prepared.
 
@@ -231,7 +231,13 @@ There are many other optional parameters available too. See in particular:
     which will be read as referring to the number of provided nodes.
 - ``max_trials_per_block``
     Determines the maximum number of trials that a participant will be allowed to experience in each block,
-    including failed trials. Note that this number does not include repeat trials.
+    including failed trials. Note that this number does not include repeat trials (see below).
+- ``n_repeat_trials``
+    Number of repeat trials to present to the participant. These trials
+    are typically used to estimate the reliability of the participant's
+    responses. Repeat trials are presented at the end of the trial maker,
+    after all blocks have been completed.
+    Defaults to 0.
 - ``allow_repeated_nodes``
     Determines whether the participant can be administered the same node more than once.
 - ``max_unique_nodes_per_block``
@@ -250,12 +256,6 @@ There are many other optional parameters available too. See in particular:
     If ``True``, the participant's performance
     is evaluated after each trial.
     Defaults to ``False``.
-- ``n_repeat_trials``
-    Number of repeat trials to present to the participant. These trials
-    are typically used to estimate the reliability of the participant's
-    responses. Repeat trials are presented at the end of the trial maker,
-    after all blocks have been completed.
-    Defaults to 0.
 
 Unlike nodes and trials, trial makers are not represented directly in the database,
 though they are referred to in database rows like ``Node.trial_maker_id`` and ``Trial.trial_maker_id``.
@@ -276,7 +276,8 @@ Assets
 Assets are PsyNet's way of representing and managing media files.
 There are two main types of assets:
 assets created from local files, and assets created from functions.
-Both kinds can be created with the ``asset`` function (see below).
+Both kinds are subclasses of the ``Asset`` class,
+but we normally create them with the ``asset`` helper function (see below).
 
 Local file assets
 ~~~~~~~~~~~~~~~~~
@@ -444,8 +445,8 @@ Blocks
 
 The default behavior of a ``StaticTrialMaker`` is to administer a sequence of trials to the participant
 where each successive trial is generated from a different node. By default, the nodes are chosen such that trials
-accumulate evenly across nodes; in other words, we make sure that all nodes have 10 trials before allowing
-any of the nodes to have 11 trials. However, this behavior is customizable in many different ways.
+accumulate evenly across nodes; in other words, we make sure that all nodes have N trials before allowing
+any of the nodes to have N + 1 trials. However, this behavior is customizable in many different ways.
 
 One way of customizing node selection is to organize nodes into blocks.
 For example, we could write something like this:
