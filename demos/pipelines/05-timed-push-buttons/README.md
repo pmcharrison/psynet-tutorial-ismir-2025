@@ -21,7 +21,7 @@ Say you want the participants to hear short snippets of the music they pressed t
 
 The simplest way to work with this experiment is to run it in GitHub Codespaces.
 To do so, navigate to the repository page in GitHub (you might be looking at it already),
-and click the green "Code" button, click "Codespaces", and then click "Create codespace on main". The codespace will take a while to start up, because it needs to install the
+and click the green "Code" button, click "Codespaces", and then click "Create a codespace on main". The codespace will take a while to start up, because it needs to install the
 dependencies, but don't worry, this is a one-time process. Once the codespace is ready, you
 can then launch the experiment in debug mode by running the following command in the terminal:
 

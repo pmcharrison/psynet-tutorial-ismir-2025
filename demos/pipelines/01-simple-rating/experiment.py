@@ -1,5 +1,5 @@
 """
-This is a simple experiment that allows participants to rate sounds on a scale of 1 to 5.
+This is a simple experiment where participants rate sounds on a scale from 1 to 5.
 """
 # pylint: disable=missing-class-docstring,missing-function-docstring
 
@@ -16,18 +16,6 @@ from psynet.modular_page import (
 from psynet.page import InfoPage
 from psynet.timeline import Event, Timeline
 from psynet.trial.static import StaticNode, StaticTrial, StaticTrialMaker
-
-# TODO: General dashboard cleaning
-# TODO: Make AudioContext requesting less intrusive when it needs to happen (e.g. play button)
-# TODO: Automatically waiting for the audio to complete before allowing submission
-# TODO: Automatically set cache=True for all assets that are available on deployment
-# TODO: Don't create static folder with psynet debug local (maybe revisit calling of _create_symlink)
-# TODO: Useful error messages if you put your assets in bad place
-# TODO: Better 'reward' footer UI
-# TODO: Replace list_stimuli with `psynet info` command,
-#       which shows various useful things about the experiment:
-# - each trial maker: label, expected number of trials per participant
-# - ...
 
 
 STIMULUS_DIR = Path("data/instrument_sounds")

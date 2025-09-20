@@ -1,5 +1,5 @@
 """
-This is an experiment that allows participants to interact in chains to write and rate word tags.
+In this experiment participants collaborate to write and rate word tags for a given stimulus.
 """
 # pylint: disable=missing-class-docstring,missing-function-docstring
 
@@ -9,12 +9,9 @@ import psynet.experiment
 from psynet.asset import asset  # noqa
 from psynet.page import InfoPage
 from psynet.timeline import Timeline
+from psynet.trial.main import TrialNetwork
 
 from .audio_step_tag import AudioStepTag
-
-
-# TODO: document the parameters
-# TODO: implement a custom Experiment.test_experiment to better test that the logic is working
 
 
 STIMULUS_DIR = Path("data/audio")
@@ -64,15 +61,6 @@ class Exp(psynet.experiment.Experiment):
         # Run this with `psynet test local`
         super().test_experiment()
 
-        from psynet.trial.main import TrialNode, TrialNetwork
-
         assert TrialNetwork.query.count() == len(list_stimuli())
 
-        # networks = TrialNetwork.query.all()
-
-        # for network in networks:
-        #     head = network.head
-        #     definition = head.definition
-
-        #     assert definition.completed
 

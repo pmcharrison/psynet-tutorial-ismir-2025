@@ -1,5 +1,5 @@
 """
-This is an experiment that allows participants to interact in chains to write and rate word tags.
+In this experiment participants mark and describe interesting moments in a piece of music.
 """
 # pylint: disable=missing-class-docstring,missing-function-docstring
 

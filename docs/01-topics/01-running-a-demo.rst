@@ -6,7 +6,7 @@ Once you have an experiment running in debug mode, it's easy to make small tweak
 and test the results.
 
 You have a couple of options for your programming environment.
-GitHub Codespaces provides a quick way to get started,
+GitHub Codespaces provides a quick, cost-free way to get started,
 via a standardized online development environment.
 Of course, it is also possible to install PsyNet locally in a virtual environment,
 which will ultimately give you better performance and more control.
@@ -22,7 +22,7 @@ Setting up your environment
     .. tab-item:: GitHub Codespaces
 
         Open the accompanying repository in `GitHub <https://github.com/pmcharrison/psynet-tutorial-ismir-2025>`_.
-        Click the green "Code" button, click "Codespaces", and then click "Create codespace on main".
+        Click the green "Code" button, click "Codespaces", and then click "Create a codespace on main".
         Optionally, we recommend clicking the "Install Codespaces" button to the right of your URL bar,
         which will make your Codespace pop out as a separate window.
         You will then have to wait a few minutes for the codespace to start up;
@@ -48,7 +48,7 @@ Setting up your environment
             ``/workspaces/psynet-tutorial-ismir-2025``.
             If you are not already in this directory, you can change to it with ``cd /workspaces/psynet-tutorial-ismir-2025``.
 
-        Wait a few moments, and you should see a popup asking "Do you want Code to open the external website?"
+        Wait a few moments, and you should see a popup asking "Do you want Code to open the external website?".
         Click "Configure Trusted Domains", and click "Trust all domains (disable link protection)".
         You should see a page containing a link to the experiment dashboard.
         Click this link, then enter 'admin' as both username and password, then press OK.

@@ -20,5 +20,7 @@ Here are some supplementary resources:
 - :doc:`02-demos/index`
 - `PsyNet documentation <https://psynet.dev>`_
 - `PsyNet repository <https://gitlab.com/PsyNetDev/PsyNet>`_
-.. - `Tutorial slides <https://docs.google.com/presentation/d/1NiqhVrmHRJQQ2LygDcM9U2Zye0zOMZK6mPrkcu949uo>`_
 - `Tutorial repository <https://github.com/pmcharrison/psynet-tutorial-ismir-2025>`_
+
+
+.. - `Tutorial slides <https://docs.google.com/presentation/d/1NiqhVrmHRJQQ2LygDcM9U2Zye0zOMZK6mPrkcu949uo>`_
