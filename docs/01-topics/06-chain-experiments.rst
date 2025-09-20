@@ -68,7 +68,7 @@ and also takes the mean answer from the node's trials:
 .. code-block:: python
 
     class CustomChainNode(ChainNode):
-        def make_next_definition(self):
+        def make_next_definition(self, experiment, participant):
             return {
                 "question": self.definition["question"],
                 "mean_rating": statistics.mean(
@@ -151,7 +151,7 @@ Here is a simple implementation of an 'imitation-chain' paradigm implemented usi
     ]
 
     class CustomChainNode(ChainNode):
-        def make_next_definition(self):
+        def make_next_definition(self, experiment, participant):
             return {
                 "story": self.completed_and_processed_trials[0].answer
             }
