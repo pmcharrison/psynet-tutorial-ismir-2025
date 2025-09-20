@@ -18,7 +18,7 @@ we also have files like ``config.txt``, which contains configuration parameters,
 ``Dockerfile`` which defines our system environment, and so on.
 
 For this tutorial we have prepared a collection of pipelines designed expressly for audio stimuli.
-However, it is perfectly possibly to design analogous pipelines for images, videos, or other
+However, it is perfectly possible to design analogous pipelines for images, videos, or other
 kinds of content.
 
 Here's a list of those pipelines:
@@ -45,8 +45,10 @@ Typically the directory is specified with some code like this:
   you can use absolute paths (e.g. ``/Users/alex/corpora/megacorpus``).
 
 For this exercise, your task will be to choose one of these pipelines and apply it to your own stimuli.
+If you have some relevant files handy, then great;
+if not, you can select some files from this `sample collection <https://drive.google.com/drive/folders/1iyYs9IHnAJwG5GoLc25wK-8Bz6VnkPlM>`_.
 You are welcome to choose whichever pipeline you like; if you want something simple, go with the 'simple-rating' pipeline,
-but if you think one of the other pipelines connects particularly well to your own research, go with that.
+but if you think one of the other pipelines connects particularly well to your own research, feel free to go with that.
 
 Steps
 -----
@@ -63,6 +65,7 @@ Steps
     the changes will not be reflected in the experiment.
     Instead, you will need to stop the debug session (Ctrl+C) and start a new one.
 
+
 Further information
 -------------------
 
@@ -71,14 +74,12 @@ Further information
 
   .. code-block:: python
 
-    data/instrument_sounds
+    data/instrument_sounds/
 
-  However, you'd need to instruct the user to add those files manually to the repository
-  after cloning it from GitHub.
+  However, users would need to add those files manually after cloning the repository from GitHub.
   Other possibilities include using `Git-LFS <https://git-lfs.com/>`_,
   or storing the files in a separate directory on your machine.
-  In practice, though, you can probably get away with up to 100 MB of audio just
-  using ordinary Git.
+  In practice, though, you can probably store up to 100 MB of media files in a Git repository without issues.
 - We call the audio files in these experiments 'assets'.
   PsyNet has a built-in system for managing assets separately from source code.
   By default it stores assets in a directory on the web server itself,

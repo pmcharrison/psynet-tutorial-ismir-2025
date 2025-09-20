@@ -38,7 +38,7 @@ def get_timeline():
             expected_trials_per_participant="n_nodes",
         ),
         InfoPage(
-            "Thank you for your participation",
+            "Thank you for your participation!",
             time_estimate=5,
         ),
     )
