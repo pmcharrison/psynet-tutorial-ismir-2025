@@ -9,7 +9,7 @@ Info pages
 ----------
 
 The **info page** is the simplest type of page.
-It's used to display text snippets to user without recording any response.
+It's used to display text snippets to the user without recording any response.
 Here's an example:
 
 .. code-block:: python
@@ -72,7 +72,7 @@ with a **push-button control** (i.e. a multiple-choice interface):
         time_estimate=5,
     )
 
-This code demonstrate the use of an **image prompt**:
+This code demonstrates the use of an **image prompt**:
 
 .. code-block:: python
 
@@ -159,7 +159,7 @@ There are a few key features to point out in this example:
 
 .. note::
 
-    PsyNet progress bars are defined by proving a list of **progress stages**.
+    PsyNet progress bars are defined by providing a list of **progress stages**.
     A progress stage is defined by a start time, an end time, a caption, and a color.
     For example, the following code defines a progress stage lasting from
     3.0 to 3.5 seconds, displayed in orange, with the caption "Get ready...":
@@ -174,7 +174,7 @@ There are a few key features to point out in this example:
     The timing of PsyNet web audio events is a little imprecise;
     you should try and make your implementation robust to these imprecisions.
     For example, in the example above we leave a silent buffer of 0.5 seconds between the
-    prompt finishing and the recording starting to avoid bleedover betweeen the two.
+    prompt finishing and the recording starting to avoid bleedover between the two.
 
 Various other prompts and controls are available in the PsyNet package:
 
@@ -183,7 +183,7 @@ Various other prompts and controls are available in the PsyNet package:
 - ``JSSynth`` - Plays audio using a simple polyphonic synthesizer.
 - ``GraphicPrompt`` - Displays programmatically generated animations.
 - ``MusicNotationPrompt`` - Displays a snippet of Western music notation.
-- ``GraphicControl`` - Like ``GraphicControl``, but the participant can click to respond.
+- ``GraphicControl`` - Displays programmatically generated animations that the participant can interact with by clicking.
 - ``CheckboxControl`` - Multiple choices with checkboxes.
 - ``RadioButtonControl`` - Multiple choices with radio buttons.
 - ``DropdownControl`` - Multiple choices with a dropdown menu.
@@ -260,8 +260,8 @@ To define your own consent page, we recommend writing something like this:
 
         time_estimate = 60
 
-        def __init__():
-            return super().__init(consent_text, time_estimate=time_estimate)
+        def __init__(self):
+            return super().__init__(consent_text, time_estimate=time_estimate)
 
 .. note::
 
@@ -316,15 +316,15 @@ Here's an example...
     <style>
         #text-input {
             background-color: {{ params.color }};
-            margin-bottom: {{ params.margin-bottom }};
+            margin-bottom: {{ params.margin_bottom }};
         }
     </style>
 
     <script>
         function retrieveResponse() {
             return {
-                rawAnswer: document.getElementById('text-input').value;
-                metadata: {};
+                rawAnswer: document.getElementById('text-input').value,
+                metadata: {},
                 blobs: {}
             }
         }
@@ -335,7 +335,7 @@ Here's an example...
 There are a few key things to note here.
 
 - The control is rendered using Jinja.
-  Jina is a templating language that allows you to inject Python variables into HTML.
+  Jinja is a templating language that allows you to inject Python variables into HTML.
 - The control takes the form of a Jinja macro called ``color_text_area``
   that takes a single input, ``params``.
 - The control is specified like an ordinary HTML file, but the customizable aspects are acquired from the
