@@ -6,10 +6,13 @@ Once you have an experiment running in debug mode, it's easy to make small tweak
 and test the results.
 
 You have a couple of options for your programming environment.
-If you are new to PsyNet, we recommend using GitHub Codespaces, a cloud-based development environment
-that is quick to set up and requires no local installation of software.
-More experienced users might prefer to install PsyNet locally in order to have more control over the environment.
-We only recommend this latter option if you are already an experienced UNIX and Python user.
+GitHub Codespaces provides a quick way to get started,
+via a standardized online development environment.
+Of course, it is also possible to install PsyNet locally in a virtual environment,
+which will ultimately give you better performance and more control.
+However, in the in-person session, we'd prefer it if you took the GitHub Codespaces option
+to keep things simple.
+
 
 Setting up your environment
 ---------------------------
@@ -18,8 +21,7 @@ Setting up your environment
 
     .. tab-item:: GitHub Codespaces
 
-        Open the accompanying repository in `GitHub <https://github.com/pmcharrison/psynet-workshop-ismir-2025>`_.
-        This repository contains configuration files for GitHub Codespaces in ``.devcontainer/``.
+        Open the accompanying repository in `GitHub <https://github.com/pmcharrison/psynet-tutorial-ismir-2025>`_.
         Click the green "Code" button, click "Codespaces", and then click "Create codespace on main".
         Optionally, we recommend clicking the "Install Codespaces" button to the right of your URL bar,
         which will make your Codespace pop out as a separate window.
@@ -27,13 +29,24 @@ Setting up your environment
         you can check the progress by clicking the "Building codespaces" text in the bottom right.
         You can tell that the codespace is ready once you see a message that says "Your Codespace is ready!".
 
+        .. note::
+
+            GitHub Codespaces configuration options are stored in the ``.devcontainer/`` directory.
+
         Once the codespace is ready, choose an experiment you want to run from the ``demos/`` directory.
         Let's say we want to run the simple-rating experiment. We can do this as follows:
 
         .. code-block:: bash
 
-            cd $DEMOS/pipelines/01-simple-rating  # Change to the experiment directory
+            cd demos/pipelines/01-simple-rating  # Change to the experiment directory
             psynet debug local  # Launch the experiment in debug mode
+
+        .. note::
+
+            ``cd`` is the command for changing directories.
+            Whenever we write a ``cd`` command in this tutorial, we assume you are starting from the root workspace directory, i.e.
+            ``/workspaces/psynet-tutorial-ismir-2025``.
+            If you are not already in this directory, you can change to it with ``cd /workspaces/psynet-tutorial-ismir-2025``.
 
         Wait a few moments, and you should see a popup asking "Do you want Code to open the external website?"
         Click "Configure Trusted Domains", and click "Trust all domains (disable link protection)".
@@ -48,8 +61,8 @@ Setting up your environment
 
         .. code-block:: bash
 
-            git clone https://github.com/pmcharrison/psynet-workshop-ismir-2025.git
-            cd psynet-workshop-ismir-2025
+            git clone https://github.com/pmcharrison/psynet-tutorial-ismir-2025.git
+            cd psynet-tutorial-ismir-2025
 
         Then, create a virtual environment and install the dependencies.
 

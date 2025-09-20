@@ -36,8 +36,8 @@ There are three main kinds of timeline elements:
 * `Code blocks`_
 
 
-`Page makers`_ are like pages, but include content that is computed
-when the participant's web page loads.
+`Pages`_ display content to the participant.
+`Page makers`_ produce pages dynamically based on the participant's state.
 `Code blocks`_ contain server logic that is executed in between pages,
 for example to assign the participant to a group or to save the participant's data.
 
@@ -75,7 +75,7 @@ Code blocks
 ~~~~~~~~~~~
 
 Code blocks define code that is executed in between pages. They are defined in a similar
-way to page makers, except they don't return an output. For example:
+way to page makers, except they don't return a page. For example:
 
 .. code-block:: python
 
@@ -95,7 +95,7 @@ For multi-line functions, you can use a named function instead of a lambda:
 
     CodeBlock(update_scores)
 
-By default, code blocks will be executed in the process of the participant navigating to the next web page.
+By default, code blocks will be executed as part of serving the participant's HTTP request.
 If the function takes a long time to execute, we recommend instead using an ``AsyncCodeBlock``;
 the function will then be executed in a separate process, and the participant will be shown a waiting page
 until the function has finished executing.
@@ -187,7 +187,7 @@ This has implications for randomness. For example, if you write this:
 
 then ``get_timeline()`` will be called exactly once (when ``experiment.py`` is imported),
 and so ``random.randint`` will be called just once,
-and so every participant will see the same random number.
+and so multiple participants may see the same random number.
 To address this issue, you could write something like this:
 
 .. code-block:: python
@@ -202,7 +202,7 @@ To address this issue, you could write something like this:
 
 However, a subtle problem with this is that page makers are called every time the page loads.
 This means that, if the participant refreshes the page, they will see a different random value,
-which may not be appropriate.
+which may not be desirable either.
 
 Instead, the best way to achieve this functionality is by combining a code block with a page maker.
 
@@ -311,7 +311,7 @@ In the following example, the while loop continues until ``randint`` returns a v
         expected_repetitions=2,
     )
 
-Note that we have to tell ``while_loop`` how many repetitions we expect on average, so that it knows how much
+Note that we have to tell ``while_loop`` how many repetitions we expect on average, so that PsyNet can know how much
 time to estimate for that part of the timeline.
 
 For loop
@@ -335,8 +335,8 @@ For example:
         ),
         for_loop(
             "counting",
-            lambda participant: list(range(1, participant.var.target_number + 1)),
-            lambda x: InfoPage(str(x), time_estimate=5),
+            iterate_over=lambda participant: list(range(1, participant.var.target_number + 1)),
+            logic=lambda x: InfoPage(str(x), time_estimate=5),
             time_estimate_per_iteration=5,
             expected_repetitions=3,
         )
@@ -351,7 +351,7 @@ Module
 Modules are a tool for organizing timeline logic into discrete units.
 In addition to promoting better code organization, modules provide
 some utilities for tracking user progress through the experiment
-(see the ``Timeline`` tab in the dashboard).
+(for example in the ``Timeline`` tab in the dashboard).
 
 A module can be defined with code like the following:
 
@@ -525,6 +525,10 @@ Note however that it only tests the back-end logic, not the front-end.
 
 **Exercise**: run ``psynet test local`` on the timeline demo (``demos/features/02-timeline``).
 
+.. hint::
+
+    ``psynet`` commands should be run from the experiment directory (in this case, ``demos/features/02-timeline``).
+
 Using the debugger
 ^^^^^^^^^^^^^^^^^^
 
@@ -551,16 +555,16 @@ and then you call it inside the code you want to debug. For example:
     )
 
 Then run the experiment, either using ``psynet test local`` or ``psynet debug local``.
-If you are using VSCode/Cursor, and assuming your launch configuration is set up correctly
-(this repository automatically does that for you by providing a prepopulated ``.vscode/launch.json`` file in
-each experiment directory),
-then once the ``debugger()`` call is hit you will see a notice in the console to press F5 to begin debugging.
+Once the ``debugger()`` call is hit you will see a notice in the console to press F5 to begin debugging.
 This should drop you into VSCode's built-in debugger, allowing you to inspect the current variables and execute
 code in the debug console. This is a great way to improve your understanding of how your experiment is working.
 
 **Exercise**: insert a ``debugger()`` call in the timeline demo's timeline and use it to explore the local environment.
 
 .. note::
+
+    To use the PsyNet debugger in a VSCode/Cursor project, your repository needs to contain an appropriate ``.vscode/launch.json`` file.
+    See this repository's ``.vscode/launch.json`` file for an example.
 
     If you aren't using VSCode or Cursor you can use a different debugger instead.
     Unfortunately standard IDE debuggers don't work out of the box because of the way that PsyNet uses subprocesses.
@@ -581,5 +585,4 @@ they're done, tell them how much they need to pay.
 
 .. hint::
 
-    We suggest you start with the timeline demo (``demos/features/02-timeline``) and modify it to
-    implement your app.
+    We suggest you use the timeline demo (``demos/features/02-timeline``) as a starting point.

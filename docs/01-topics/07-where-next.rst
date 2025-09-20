@@ -1,8 +1,7 @@
 Where next?
 ===========
 
-With these preceding chapters, you've learned all you need to implement
-sophisticated audio experiments in PsyNet. Congratulations!
+If you've made it through all these chapters, you're pretty much a PsyNet expert. Congratulations!
 
 Deploying an experiment to a web server requires some additional steps
 that we have not covered in this tutorial.
@@ -13,7 +12,7 @@ You could for example be interested in learning more about
 `graphics in PsyNet <https://psynetdev.gitlab.io/PsyNet/tutorials/graphics.html>`_
 or how to `synchronize multiple participants <https://psynetdev.gitlab.io/PsyNet/tutorials/synchronization.html>`_
 to produce multiplayer paradigms.
-The documentation is still work-in-progress, but we hope to update it soon and merge in the content developed in this tutorial.
+That documentation website is still work-in-progress, but we hope to polish it off soon.
 
 We welcome your questions and feedback. Please feel free to write to Peter Harrison (pmch2@cam.ac.uk)
 and Nori Jacoby (kj338@cornell.edu) with thoughts and suggestions.

@@ -1,9 +1,11 @@
 Overview
 ========
 
-This tutorial comprises a series of chapters, intended to be read in order.
-Don't worry if you don't make it through all of them in the tutorial itself,
-you can always continue another time!
+This tutorial comprises a series of chapters, intended to be consumed in order.
+There should be more than enough material here for the in-person session,
+but if you want to continue after the session, you can always come back to this website.
+
+The tutorial comprises the following chapters:
 
 - :doc:`01-topics/01-running-a-demo`
 - :doc:`01-topics/02-pipelines`
@@ -13,8 +15,7 @@ you can always continue another time!
 - :doc:`01-topics/06-chain-experiments`
 - :doc:`01-topics/07-where-next`
 
-Other resources
----------------
+Here are some supplementary resources:
 
 - :doc:`02-demos/index`
 - `PsyNet documentation <https://psynet.dev>`_

@@ -73,6 +73,13 @@ In the :doc:`simple rating <../02-demos/pipelines/01-simple-rating>` experiment,
 Nodes are implemented as database-backed objects using SQLAlchemy.
 This means that, when the experiment is running, you can see each node as a row in the database (see the Database tab in the dashboard).
 
+.. note::
+
+    SQLAlchemy is a Python library for interacting with databases.
+    It has extensive documentation available at `sqlalchemy.org <https://www.sqlalchemy.org/>`_.
+    However, if you want to learn more, you might want to start by reading
+    the `PsyNet introduction to SQLAlchemy <https://psynetdev.gitlab.io/PsyNet/tutorials/introduction_to_sql_alchemy.html>`_.
+
 There are several ways to access nodes when the experiment is running:
 
 .. code-block:: python
@@ -211,7 +218,8 @@ There are four compulsory parameters for instantiating a static trial maker:
     rather than ``nodes=get_nodes()``.
     The latter would fail when the app is deployed,
     because the app would try to list files that are automatically excluded from the source code package.
-    If you provide ``get_nodes`` unevaluated, then PsyNet will only evaluate it on the local machine when the app is being deployed.
+    Instead, you should defer evaluation by providing ``get_nodes`` as a function,
+    which allows PsyNet to only evaluate it on the local machine while the deployment package is being prepared.
 
 There are many other optional parameters available too. See in particular:
 
@@ -259,6 +267,8 @@ with the following code:
     from psynet.experiment import get_trial_maker
 
     get_trial_maker("xxx") # get the trial maker with ID "xxx"
+    node.trial_maker # get the trial maker for a node
+    trial.trial_maker # get the trial maker for a trial
 
 Assets
 ------
@@ -266,7 +276,7 @@ Assets
 Assets are PsyNet's way of representing and managing media files.
 There are two main types of assets:
 assets created from local files, and assets created from functions.
-Both kinds can be created with the ``asset`` function.
+Both kinds can be created with the ``asset`` function (see below).
 
 Local file assets
 ~~~~~~~~~~~~~~~~~
@@ -293,6 +303,19 @@ of the file to generate.
 It can also request arguments that are keys in the node or trial's definition;
 we will see an example below.
 
+Asset configuration
+~~~~~~~~~~~~~~~~~~~
+
+There are a few configuration options you can specify when creating an asset:
+
+- ``cache`` -
+  If ``True``, the asset will be cached on the web server between deployments.
+  This is useful if you have a large stimulus set, or if you are using function assets that are slow to run.
+- ``extension`` -
+  The extension of the file to generate.
+- ``arguments`` -
+  A dictionary of additional arguments to pass to the function.
+
 Placing assets
 ~~~~~~~~~~~~~~
 
@@ -308,7 +331,7 @@ during experiment deployment.
 
 If using a function asset in this context, you can include keys from the node definition
 in the function signature and these parts of the definition will be passed to the function.
-In the following example, we use this technique to populate the ``f0`` argument:
+In the following example, we use this technique to populate the function's ``f0`` argument:
 
 .. code-block:: python
 
@@ -400,6 +423,7 @@ Alternatives to the asset system
 In some cases (e.g. very large collections of stimuli) you might want to bypass the asset system altogether
 and implement your own file management system.
 There are two main alternatives:
+
 1. Place the files in the ``static`` directory and access them like ``/static/filename.mp3``.
 2. Upload the files to an external storage system and code the URLs directly into the experiment.
 
@@ -408,65 +432,12 @@ Interim conclusion
 
 We have now reviewed the key classes used to implement static experiments in PsyNet:
 nodes, trials, trial makers, and assets.
-With these tools you can already implement a great range of paradigms.
+With these tools you can already implement quite a few paradigms.
 However, there are some further techniques you might find useful for achieving more flexibility;
 these are described below.
 
-Advanced usage
---------------
-
-Trial-specific definitions
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-By default trials inherit their definitions verbatim from their parent nodes.
-However, sometimes it's desirable to introduce some surface variation at the trial level:
-for example, we might want each node to represent a different audio file,
-but want each trial to involve random volume and pan parameters, so as to increase variety for the participants.
-This is achieved using the trial's ``finalize_definition`` method.
-This method receives the initial definition from the node; the experimenter can then alter or add to this information to produce the trial's definition.
-For example:
-
-.. code-block:: python
-
-    class CustomTrial(StaticTrial):
-        def finalize_definition(self, definition, experiment, participant):
-            definition["pan"] = random.uniform(-1.0, 1.0)
-            definition["volume"] = random.uniform(0.75, 1.25)
-            return definition
-
-This might mean we need to generate a new asset for that specific trial.
-As before, we create this asset with the ``asset`` function, and then add it to the trial using the ``add_assets`` method.
-See the following example:
-
-.. code-block:: python
-
-    from psynet.asset import asset
-
-    class CustomTrial(StaticTrial):
-        def finalize_definition(self, definition, experiment, participant):
-            definition["pan"] = random.uniform(-1.0, 1.0)
-            definition["volume"] = random.uniform(0.75, 1.25)
-            self.add_assets({
-                "modified_stimulus": asset(
-                    self.generate_stimulus,
-                    extension=".wav",
-                )
-            })
-            return definition
-
-        def generate_stimulus(self, path, pan, volume):
-            original_audio_asset = self.node.assets["stimulus"]
-            assert isinstance(original_audio_asset.storage, LocalStorage), \
-                "generate_stimulus currently only supports LocalStorage"
-
-            original_audio_path = original_audio_asset.var.file_system_path
-            sample_rate, audio = wavfile.read(original_audio_path)
-            apply_pan(audio, pan)
-            apply_volume(audio, volume)
-            wavfile.write(path, sample_rate, audio)
-
-Note how we access the parent node's assets using ``self.node.assets``,
-read the relevant asset file using ``wavfile.read``, and write our own new asset file using ``wavfile.write``.
+Further techniques
+------------------
 
 Blocks
 ~~~~~~
@@ -692,6 +663,61 @@ Here's an example:
                 Congratulations! You can continue to the next stage.
                 """
             )
+
+
+Trial-specific definitions
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default trials inherit their definitions verbatim from their parent nodes.
+However, sometimes it's desirable to introduce some surface variation at the trial level:
+for example, we might want each node to represent a different audio file,
+but want each trial to involve random volume and pan parameters, so as to increase variety for the participants.
+This is achieved using the trial's ``finalize_definition`` method.
+This method receives the initial definition from the node; the experimenter can then alter or add to this information to produce the trial's definition.
+For example:
+
+.. code-block:: python
+
+    class CustomTrial(StaticTrial):
+        def finalize_definition(self, definition, experiment, participant):
+            definition["pan"] = random.uniform(-1.0, 1.0)
+            definition["volume"] = random.uniform(0.75, 1.25)
+            return definition
+
+This might mean we need to generate a new asset for that specific trial.
+As before, we create this asset with the ``asset`` function, and then add it to the trial using the ``add_assets`` method.
+See the following example:
+
+.. code-block:: python
+
+    from psynet.asset import asset
+
+    class CustomTrial(StaticTrial):
+        def finalize_definition(self, definition, experiment, participant):
+            definition["pan"] = random.uniform(-1.0, 1.0)
+            definition["volume"] = random.uniform(0.75, 1.25)
+            self.add_assets({
+                "modified_stimulus": asset(
+                    self.generate_stimulus,
+                    extension=".wav",
+                )
+            })
+            return definition
+
+        def generate_stimulus(self, path, pan, volume):
+            original_audio_asset = self.node.assets["stimulus"]
+            assert isinstance(original_audio_asset.storage, LocalStorage), \
+                "generate_stimulus currently only supports LocalStorage"
+
+            original_audio_path = original_audio_asset.var.file_system_path
+            sample_rate, audio = wavfile.read(original_audio_path)
+            apply_pan(audio, pan)
+            apply_volume(audio, volume)
+            wavfile.write(path, sample_rate, audio)
+
+Note how we access the parent node's assets using ``self.node.assets``,
+read the relevant asset file using ``wavfile.read``, and write our own new asset file using ``wavfile.write``.
+
 
 Recordings
 ~~~~~~~~~~

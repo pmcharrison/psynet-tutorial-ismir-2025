@@ -3,10 +3,7 @@ Pages
 
 PsyNet uses ``Page`` objects to represent what the participant sees at a given point in the experiment.
 These ``Page`` objects are Python objects, all inheriting from the same ``Page`` base class.
-Under the hood, the crucial method is ``Page.render``, which returns the HTML for the participant's current page.
-If you wanted, you could customize this ``render`` method directly to make arbitrary pages.
-In practice, though, most people use helper classes (e.g. ``InfoPage``, ``ModularPage``) that
-provide pre-built implementations, and that's what we'll look at now.
+We will talk through a few examples now.
 
 Info pages
 ----------
@@ -114,7 +111,7 @@ the participant hears the audio stimulus and then writes about it.
         time_estimate=5,
     ),
 
-Here's a considerably more complex example.
+Here's a more complex example.
 We play some audio (using an **audio prompt**) and then record from the participant's microphone
 (using an **audio record control**).
 
@@ -155,6 +152,8 @@ There are a few key features to point out in this example:
 - By default, the audio record control would start recording at the same time that the audio prompt starts.
   However, we've used the page's ``events`` parameter to specify that we instead want the ``recordStart``
   event to be triggered 0.5 seconds after the ``promptEnd`` event.
+  See the `PsyNet documentation <https://psynetdev.gitlab.io/PsyNet/tutorials/event_management.html>`_
+  for more information on event management.
 - We've used the page's ``progress_display`` parameter to design a **progress display** that will include
   both a progress bar and some progress text. This is helpful for showing the participant what to do when.
 
@@ -210,7 +209,7 @@ Exercises
    The source code will contain a variety of additional parameters;
    verify that you can change them and see the results when refreshing the browser.
 
-.. warning::
+.. hint::
 
     Most cosmetic changes will display when you refresh the page, but if you add files to the ``/static`` directory,
     you will need to stop the debug session (CTRL-C) and rerun ``psynet debug local``.
@@ -232,6 +231,11 @@ Exercises
 
 Further reading
 ---------------
+
+.. important::
+
+    If you are currently taking the in-person session, we recommend skipping the further reading section
+    for now and proceeding to the next chapter.
 
 Consent pages
 ^^^^^^^^^^^^^
@@ -274,6 +278,24 @@ Successful end pages do not normally need to be inserted explicitly; any partici
 the end of the timeline will be considered a successful completion.
 Unsuccessful end pages are more useful:
 we can use them to declare that a given participant has failed the experiment and needs to exit early.
+For example:
+
+.. code-block:: python
+
+    join(
+        ModularPage(
+            "attention",
+            "Are you paying attention?",
+            PushButtonControl(choices=["Yes", "No"]),
+            time_estimate=5,
+            save_answer="attention",
+        ),
+        conditional(
+            "attention",
+            condition=lambda participant: participant.var.attention == "No",
+            logic_if_true=UnsuccessfulEndPage(failure_tags=["attention"]),
+        ),
+    )
 
 Custom classes
 ^^^^^^^^^^^^^^
@@ -313,8 +335,8 @@ Here's an example...
 There are a few key things to note here.
 
 - The control is rendered using Jinja.
-  Jina is a templating language that allows you to inject Python variables into HTML files.
-- More specifically, the control takes the form of a Jinja macro called ``color_text_area``
+  Jina is a templating language that allows you to inject Python variables into HTML.
+- The control takes the form of a Jinja macro called ``color_text_area``
   that takes a single input, ``params``.
 - The control is specified like an ordinary HTML file, but the customizable aspects are acquired from the
   ``params`` object using curly bracket notation.

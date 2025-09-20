@@ -40,7 +40,7 @@ Typically the directory is specified with some code like this:
 .. note::
 
   File paths are typically specified relative to the root of the
-  experiment directory, i.e. the directory containing the ``experiment.py`` file).
+  experiment directory, i.e. the directory containing the ``experiment.py`` file.
   However, if you want to point to files outside your experiment directory,
   you can use absolute paths (e.g. ``/Users/alex/corpora/megacorpus``).
 
@@ -57,12 +57,15 @@ Steps
 4. Update the ``experiment.py`` file to point to your stimuli.
 5. Try the experiment again by running ``psynet debug local``.
 
-Tips
-----
+.. hint::
 
-- If you change ``STIMULUS_DIR`` while ``psynet debug local`` is running,
-  the changes will not be reflected in the experiment.
-  Instead, you will need to stop the debug session (Ctrl+C) and start a new one.
+    If you change ``STIMULUS_DIR`` while ``psynet debug local`` is running,
+    the changes will not be reflected in the experiment.
+    Instead, you will need to stop the debug session (Ctrl+C) and start a new one.
+
+Further information
+-------------------
+
 - Normally you would not want to commit large numbers of audio files to a Git repository.
   To prevent such files from being committed, you can add them to the ``.gitignore`` file, for example:
 
@@ -81,3 +84,4 @@ Tips
   By default it stores assets in a directory on the web server itself,
   though it is also possible to select an 'S3 storage' option, where assets are instead stored
   in an Amazon Web Services S3 bucket.
+  We will learn more about assets later in the tutorial.
