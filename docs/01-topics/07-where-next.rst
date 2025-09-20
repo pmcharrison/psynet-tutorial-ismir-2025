@@ -7,7 +7,7 @@ Deploying an experiment to a web server requires some additional steps
 that we have not covered in this tutorial.
 For information on these topics, please visit the `main PsyNet documentation website <https://psynet.dev>`_.
 
-This documentation website also contains a range of other tutorials about different PsyNet topics.
+That documentation website also contains a range of other tutorials about different PsyNet topics.
 You could for example be interested in learning more about
 `graphics in PsyNet <https://psynetdev.gitlab.io/PsyNet/tutorials/graphics.html>`_
 or how to `synchronize multiple participants <https://psynetdev.gitlab.io/PsyNet/tutorials/synchronization.html>`_
