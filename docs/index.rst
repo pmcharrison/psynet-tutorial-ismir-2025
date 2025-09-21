@@ -10,8 +10,7 @@ and to give you some hands-on experience with the software.
 
 The tutorial will begin with a spoken presentation where we'll introduce PsyNet
 and talk about various case studies that use it.
-
-.. You can find the slides `here <https://docs.google.com/presentation/d/1NiqhVrmHRJQQ2LygDcM9U2Zye0zOMZK6mPrkcu949uo>`_.
+You can find the slides `here <https://docs.google.com/presentation/d/1NiqhVrmHRJQQ2LygDcM9U2Zye0zOMZK6mPrkcu949uo>`_.
 
 In the latter part of the session we'll get you started with PsyNet.
 We've put together a step-by-step tutorial, hosted on this website,
