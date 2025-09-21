@@ -71,7 +71,7 @@ Setting up your environment
 
             python -m venv venv
             source venv/bin/activate
-            pip install -r requirements.txt -c constraints.txt
+            pip install -r constraints.txt
 
         .. warning::
 
