@@ -216,6 +216,7 @@ Hints
   To prevent this, create a custom subclass of ``TextControl`` with a custom ``validate`` function:
 
     .. code-block:: python
+
         from psynet.timeline import FailedValidation
 
         class MelodyTextControl(TextControl):
